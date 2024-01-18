@@ -128,7 +128,7 @@ ENV/
 env.bak/
 venv.bak/
 .idea/
-
+alembic/versions
 
 # Spyder project settings
 .spyderproject

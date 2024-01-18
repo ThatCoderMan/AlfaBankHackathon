@@ -1,3 +1,4 @@
+from app.models.base import *
 import asyncio
 import os
 from logging.config import fileConfig

@@ -1,11 +1,13 @@
+import os
+
 from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    app_title: str = "AlfaBankHackathon"
-    description: str = "AlfaBankHackathon"
-    secret: str = "SECRET"
-    database_url: str = "sqlite+aiosqlite:///./fastapi.db"
+    app_title: str = os.getenv('APP_TITLE')
+    description: str = os.getenv('DESCRIPTION')
+    secret: str = os.getenv('SECRET')
+    database_url: str = os.getenv('DATABASE_URL')
 
     class Config:
         env_file = ".env"
