@@ -13,6 +13,8 @@ alembic = "^1.13.1"
 SQLAlchemy = "^2.0.25"
 pydantic-settings = "^2.1.0"
 pre-commit = "^3.6.0"
+asyncpg = "^0.29.0"
+greenlet = "^3.0.3"
 
 [tool.poetry.group.dev.dependencies]
 fastapi = "^0.109.0"

@@ -20,6 +20,8 @@
 - [Poetry](#poetry)
   - [Установка poetry](#установка-poetry)
   - [Работа с зависимостями](#работа-с-зависимостями)
+- [Alembic](#alembic)
+  - [Команды](#команды)
 - [работа с GIT](#работа-с-git)
   - [Нейминг веток](#нейминг-веток)
   - [Pull Request](#pull-request)
@@ -193,6 +195,70 @@ pre-commit install
 
 Да, возможно придется повторить не 1 раз :) Но в итоге мы получим чистый, отформатированный, протипизированный и в целом
 красивый код, который поймет кто угодно!
+
+[⬆️ К оглавлению](#оглавление)
+
+## Alembic
+Необходим для создания автоматических миграций из SQLAlchemy
+
+### Команды:
+> При выполнении миграций можно вводить вместо `head` просто `h`, `he` и тд., если так начинается название только одного файла миграций.
+> 
+> Аналогично можно применять revision id 
+> 
+> Также поддерживается относительное указание миграций: «выполнить две следующие миграции» или «откатить три предыдущие»; для этого после команд `upgrade` и `downgrade` нужно указать число со знаком плюс или минус: `alembic ugprade +2` или `alembic downgrade -3`
+
+
+Создание новой миграции:
+```bash
+alembic revision --autogenerate -m "Migration Message"
+```
+> revision id можно указать вручную при помощи флага `--rev-id 01`
+
+Выполнение всех неприменённых миграций:
+```bash
+alembic upgrade head 
+```
+> Для выполнений до конкретной миграции вместо head прописать revision id `befcaa650c3f`
+
+Отменить всех миграций, которые были в проекте:
+```bash
+alembic downgrade base
+```
+> Для выполнений до конкретной миграции вместо head прописать revision id `466f1da3d4b1`
+
+Хронология миграций в подробном виде:
+```bash
+alembic history -v 
+```
+> Rev: `befcaa650c3f` `(head)`                                                                                        
+> Parent: `466f1da3d4b1`                                                                                            
+> Path: `...\alembic\versions\befcaa650c3f_second_migration.py`
+>                                                                                                                 
+>     Add description to MeetingRoom                                                                              
+>                                                                                                                 
+>     Revision ID: befcaa650c3f                                                                                   
+>     Revises: 466f1da3d4b1                                                                                       
+>     Create Date: 2024-01-18 20:20:20.202020                                                                     
+> 
+> Rev: `466f1da3d4b1`
+> Parent: `<base>`
+> Path: `...\alembic\versions\466f1da3d4b1_first_migration.py`
+> 
+>     First migration
+> 
+>     Revision ID: 466f1da3d4b1
+>     Revises:
+>     Create Date: 2024-01-18 10:10:10.101010   
+
+Просмотр последней применённой миграции:
+```bash
+alembic current 
+```
+> выводит revision id текущей миграции
+> 
+>     466f1da3d4b1 
+
 
 [⬆️ К оглавлению](#оглавление)
 
