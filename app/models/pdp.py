@@ -1,9 +1,10 @@
-from enum import Enum
+from enum import Enum as Enumer
 
-from sqlalchemy import Column, ForeignKey, Integer, String, Table, Text
+from sqlalchemy import Column, Enum, ForeignKey, Integer, String, Table, Text
 from sqlalchemy.orm import relationship
 
 from base import AbstractDatesModel, Base
+from users import User
 
 
 LENGTH_LIMITS_STRING_FIELDS = 100
@@ -11,7 +12,7 @@ LENGTH_LIMITS_TEXT_FIELDS = 255
 LENGTH_LIMITS_SKILL_NAME_FIELD = 50
 
 
-class Status(Enum):
+class Status(Enumer):
     """Выбор статуса"""
     REQUEST = 'Заявка'
     IN_WORK = 'В работе'
@@ -28,7 +29,7 @@ pdp_skill = Table(
 )
 
 task_skill = Table(
-    'pdp_skill',
+    'task_skill',
     Base.metadata,
     Column('task_id', Integer, ForeignKey('task.id')),
     Column('skill_id', Integer, ForeignKey('skill.id'))
@@ -54,22 +55,24 @@ class Skill(Base):
     )
 
 
-class PDP(Base, AbstractDatesModel):
+class PDP(AbstractDatesModel):
     """Модель ИПР"""
     user_id = Column(
         Integer,
         ForeignKey('user.id')
     )
     status = Column(
-        String(max(len(value.value) for value in Status)),
+        Enum(Status).with_variant(
+            String(max(len(value.value) for value in Status)),
+            'sqlite',
+            'postgresql'),
         default=Status.IN_WORK.value,
-        enum=Status
     )
 
     skills = relationship("Skill", secondary=pdp_skill, back_populates="pdp")
 
 
-class Task(Base, AbstractDatesModel):
+class Task(AbstractDatesModel):
     """Модель задач"""
     pdp_id = Column(Integer, ForeignKey('pdp.id'))
     type = Column(String(LENGTH_LIMITS_STRING_FIELDS), nullable=False)

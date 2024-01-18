@@ -1,14 +1,14 @@
-from enum import Enum
+from enum import Enum as Enumer
 
 from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
-from sqlalchemy import Column, String
+from sqlalchemy import Column, Enum, String
 
 from base import Base
 
 LENGTH_LIMITS_USER_FIELDS = 150
 
 
-class UserRole(Enum):
+class UserRole(Enumer):
     """Выбор роли"""
     CHIEF = 'chief'
     EMPLOYEE = 'employee'
@@ -30,8 +30,10 @@ class User(SQLAlchemyBaseUserTable, Base):
         nullable=False
     )
     role = Column(
-        String(max(len(value.value) for value in UserRole)),
+        Enum(UserRole).with_variant(
+            String(max(len(value.value) for value in UserRole)),
+            'sqlite',
+            'postgresql'),
         nullable=False,
-        default=UserRole.EMPLOYEE.value,
-        enum=UserRole
+        default=UserRole.EMPLOYEE.value
     )
