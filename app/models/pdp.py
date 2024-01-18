@@ -21,13 +21,6 @@ class Status(Enumer):
     EXECUTE = 'Исполнена'
 
 
-pdp_skill = Table(
-    'pdp_skill',
-    Base.metadata,
-    Column('pdp_id', Integer, ForeignKey('pdp.id')),
-    Column('skill_id', Integer, ForeignKey('skill.id'))
-)
-
 task_skill = Table(
     'task_skill',
     Base.metadata,
@@ -43,11 +36,6 @@ class Skill(Base):
         nullable=False,
         unique=True
     )
-    pdp = relationship(
-        "PDP",
-        secondary=pdp_skill,
-        back_populates="skill"
-    )
     task = relationship(
         "Task",
         secondary=task_skill,
@@ -61,15 +49,7 @@ class PDP(AbstractDatesModel):
         Integer,
         ForeignKey('user.id')
     )
-    status = Column(
-        Enum(Status).with_variant(
-            String(max(len(value.value) for value in Status)),
-            'sqlite',
-            'postgresql'),
-        default=Status.IN_WORK.value,
-    )
-
-    skills = relationship("Skill", secondary=pdp_skill, back_populates="pdp")
+    goal = Column(String(LENGTH_LIMITS_STRING_FIELDS), nullable=False)
 
 
 class Task(AbstractDatesModel):
@@ -80,6 +60,13 @@ class Task(AbstractDatesModel):
     chief_comment_id = Column(Integer, ForeignKey('comment.id'))
     employee_comment_id = Column(Integer, ForeignKey('comment.id'))
     skills = relationship("Skill", secondary=task_skill, back_populates="task")
+    status = Column(
+        Enum(Status).with_variant(
+            String(max(len(value.value) for value in Status)),
+            'sqlite',
+            'postgresql'),
+        default=Status.IN_WORK.value,
+    )
 
 
 class Comment(Base):
