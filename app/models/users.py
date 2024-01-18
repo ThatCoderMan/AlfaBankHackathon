@@ -1,7 +1,8 @@
 from enum import Enum as Enumer
 
-from fastapi_users import SQLAlchemyBaseUserTable
-from sqlalchemy import Column, Enum, ForeignKey, Integer, String
+from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
+from sqlalchemy import Column, Enum, ForeignKey, Integer, String, Table
+from sqlalchemy.orm import relationship
 
 from base import Base
 
@@ -13,6 +14,14 @@ class UserRole(Enumer):
     """Выбор роли"""
     CHIEF = 'chief'
     EMPLOYEE = 'employee'
+
+
+user_user = Table(
+    'user_user',
+    Base.metadata,
+    Column('user_id', Integer, ForeignKey('user.id')),
+    Column('chief_id', Integer, ForeignKey('user.id'))
+)
 
 
 class User(SQLAlchemyBaseUserTable, Base):
@@ -38,5 +47,16 @@ class User(SQLAlchemyBaseUserTable, Base):
         nullable=False,
         default=UserRole.EMPLOYEE.value
     )
-    chief_id = Column(Integer, ForeignKey('user.id'))
+    chief = relationship(
+        "User",
+        secondary=user_user,
+        back_populates="chief",
+        foreign_keys=[user_user.c.chief_id]
+    )
+    employee = relationship(
+        "User",
+        secondary=user_user,
+        back_populates="employee",
+        foreign_keys=[user_user.c.user_id]
+    )
     photo = Column(String(LENGTH_LIMITS_LINK_FIELDS))
