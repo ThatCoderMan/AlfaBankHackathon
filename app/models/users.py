@@ -1,11 +1,12 @@
 from enum import Enum as Enumer
 
-from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
-from sqlalchemy import Column, Enum, String
+from fastapi_users import SQLAlchemyBaseUserTable
+from sqlalchemy import Column, Enum, ForeignKey, Integer, String
 
 from base import Base
 
 LENGTH_LIMITS_USER_FIELDS = 150
+LENGTH_LIMITS_LINK_FIELDS = 200
 
 
 class UserRole(Enumer):
@@ -37,3 +38,5 @@ class User(SQLAlchemyBaseUserTable, Base):
         nullable=False,
         default=UserRole.EMPLOYEE.value
     )
+    chief_id = Column(Integer, ForeignKey('user.id'))
+    photo = Column(String(LENGTH_LIMITS_LINK_FIELDS))
