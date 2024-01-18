@@ -10,6 +10,7 @@ from users import User
 LENGTH_LIMITS_STRING_FIELDS = 100
 LENGTH_LIMITS_TEXT_FIELDS = 255
 LENGTH_LIMITS_SKILL_NAME_FIELD = 50
+LENGTH_LIMITS_TYPE_NAME_FIELD = 50
 
 
 class Status(Enumer):
@@ -43,6 +44,15 @@ class Skill(Base):
     )
 
 
+class Type(Base):
+    """Модель навыков"""
+    name = Column(
+        String(LENGTH_LIMITS_TYPE_NAME_FIELD),
+        nullable=False,
+        unique=True
+    )
+
+
 class PDP(AbstractDatesModel):
     """Модель ИПР"""
     user_id = Column(
@@ -55,7 +65,7 @@ class PDP(AbstractDatesModel):
 class Task(AbstractDatesModel):
     """Модель задач"""
     pdp_id = Column(Integer, ForeignKey('pdp.id'))
-    type = Column(String(LENGTH_LIMITS_STRING_FIELDS), nullable=False)
+    type = Column(Integer, ForeignKey('type.id'))
     description = Column(Text(LENGTH_LIMITS_TEXT_FIELDS), nullable=False)
     chief_comment_id = Column(Integer, ForeignKey('comment.id'))
     employee_comment_id = Column(Integer, ForeignKey('comment.id'))
