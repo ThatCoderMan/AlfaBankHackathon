@@ -1,20 +1,8 @@
 from datetime import datetime
 
-from sqlalchemy import Column, Date, Integer
-from sqlalchemy.orm import declarative_base, declared_attr
+from sqlalchemy import Column, Date
 
-
-class BaseModel:
-    """Основа для таблиц БД"""
-
-    @declared_attr
-    def __tablename__(cls):
-        return cls.__name__.lower()
-
-    id = Column(Integer, primary_key=True)
-
-
-Base = declarative_base(cls=BaseModel)
+from core.db import Base
 
 
 class AbstractDatesModel(Base):
