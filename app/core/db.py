@@ -5,7 +5,6 @@ from sqlalchemy.orm import declarative_base, declared_attr, sessionmaker
 from app.core.config import settings
 
 
-# type: ignore
 class PreBase:
     @declared_attr
     def __tablename__(cls):  # noqa
