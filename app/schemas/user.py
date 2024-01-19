@@ -1,4 +1,5 @@
 from fastapi_users import schemas
+from pydantic import EmailStr
 
 
 class UserRead(schemas.BaseUser[int]):
@@ -9,19 +10,17 @@ class UserRead(schemas.BaseUser[int]):
     first_name: str
     last_name: str
     patronymic_name: str
-    email: str
+    email: EmailStr
 
 
 class UserCreate(schemas.BaseUserCreate):
     """
-    Модель для чтения информации о пользователе.
+    Модель для Создания пользователя.
     """
 
     id: int
     first_name: str
     last_name: str
     patronymic_name: str
-    email: str
-    is_active: bool
-    is_superuser: bool
-    is_verified: bool
+    email: EmailStr
+    password: str

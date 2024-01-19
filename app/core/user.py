@@ -1,5 +1,3 @@
-import os
-
 from fastapi import Depends
 from fastapi_users import BaseUserManager, FastAPIUsers, IntegerIDMixin
 from fastapi_users.authentication import (
@@ -9,10 +7,11 @@ from fastapi_users.authentication import (
 )
 from fastapi_users.db import SQLAlchemyUserDatabase
 
-from app.models.base import User
-from app.auth.crud import get_user_db
+from app.models.user import User
+from app.crud.crud import get_user_db
+from app.core.config import Settings
 
-SECRET = os.getenv('SECRET')
+SECRET = Settings().secret
 
 
 class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
@@ -40,6 +39,7 @@ def get_jwt_strategy() -> JWTStrategy:
     Этот экземпляр используется для аутентификации
     пользователей с помощью токенов JWT.
     """
+
     return JWTStrategy(secret=SECRET, lifetime_seconds=3600)
 
 
