@@ -1,7 +1,16 @@
+from datetime import datetime
 from enum import Enum as Enumer
 
 from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
-from sqlalchemy import Column, Enum, ForeignKey, Integer, String, Table
+from sqlalchemy import (
+    Column,
+    DateTime,
+    Enum,
+    ForeignKey,
+    Integer,
+    String,
+    Table
+)
 from sqlalchemy.orm import relationship
 
 from base import Base
@@ -26,6 +35,7 @@ user_user = Table(
 
 class User(SQLAlchemyBaseUserTable, Base):
     """Модель пользователя"""
+    created = Column(DateTime, default=datetime.now)
     first_name = Column(
         String(LENGTH_LIMITS_USER_FIELDS),
         nullable=False
