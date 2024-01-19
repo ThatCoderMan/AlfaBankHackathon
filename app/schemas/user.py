@@ -1,26 +1,43 @@
-from fastapi_users import schemas
-from pydantic import EmailStr
+from pydantic import EmailStr, BaseModel
 
 
-class UserRead(schemas.BaseUser[int]):
+class LoginUser(BaseModel):
     """
-    Модель для чтения информации о пользователе.
+    Модель для аутентификации пользователя.
+    """
+
+    email: EmailStr
+    hashed_password: str
+
+
+class Token(BaseModel):
+    """
+    Модель для выдачи токена.
+    """
+
+    email: EmailStr
+    access_token: str
+    token_type: str
+
+
+class LoginRequest(BaseModel):
+    """
+    Модель для запроса при регистрации пользователя.
     """
 
     first_name: str
     last_name: str
     patronymic_name: str
     email: EmailStr
+    hashed_password: str
 
 
-class UserCreate(schemas.BaseUserCreate):
+class RegisterUser(BaseModel):
     """
-    Модель для Создания пользователя.
+    Модель для ответа при регистрации пользователя.
     """
 
-    id: int
     first_name: str
     last_name: str
     patronymic_name: str
     email: EmailStr
-    password: str
