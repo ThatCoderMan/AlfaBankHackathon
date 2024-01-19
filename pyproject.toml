@@ -25,3 +25,13 @@ SQLAlchemy = "^2.0.25"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+skip-string-normalization = true
+line-length = 79
+include_trailing_comma = true
+
+[tool.isort]
+profile = "black"
+line_length = 79
+include_trailing_comma = true

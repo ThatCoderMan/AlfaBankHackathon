@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class Task(BaseModel):
+class TaskBase(BaseModel):
     id: int
     pdp_id: int
     type: int

@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class PDP(BaseModel):
+class PDPBase(BaseModel):
     id: int
     user_id: int
     goal: str

@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class Status(BaseModel):
+class StatusBase(BaseModel):
     id: int
     name: str
     role: str
