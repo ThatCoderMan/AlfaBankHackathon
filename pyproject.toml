@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "alfa-bank-hackathon"
+name = "app"
 version = "0.1.0"
 description = ""
 authors = ["Your Name <you@example.com>"]
@@ -17,10 +17,6 @@ fastapi-users = {extras = ["sqlalchemy"], version = "^12.1.2"}
 fastapi-users-db-sqlalchemy = "^6.0.1"
 
 [tool.poetry.group.dev.dependencies]
-fastapi = "^0.109.0"
-uvicorn = "^0.26.0"
-alembic = "^1.13.1"
-SQLAlchemy = "^2.0.25"
 
 [build-system]
 requires = ["poetry-core"]
