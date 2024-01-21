@@ -6,17 +6,16 @@ from app.models.user import User
 
 async def get_user(db: AsyncSession, email: str):
     """Получение пользователя по email из БД."""
-    result = await db.execute(select(User).filter(
-        User.email == email))
+    result = await db.execute(select(User).filter(User.email == email))
     user = result.scalars().first()
     return user
 
 
 async def create_user(
-    db: AsyncSession,
-    email: str,
-    hashed_password: str,
-    **kwargs
+        db: AsyncSession,
+        email: str,
+        hashed_password: str,
+        **kwargs
 ):
     """Создание нового пользователя в БД."""
     new_user = User(
