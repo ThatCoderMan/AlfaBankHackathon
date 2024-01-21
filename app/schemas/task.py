@@ -1,14 +1,33 @@
+from typing import Union
+
 from pydantic import BaseModel
 
 
 class TaskBase(BaseModel):
-    id: int
-    pdp_id: int
     type: int
     description: str
     skills: str
-    chief_comment: str
-    employee_comment: str
+    chief_comment: Union[str, None] = None
+    employee_comment: Union[str, None] = None
     status: int
-    starting_date: str
     deadline: str
+
+
+class TaskCreate(TaskBase):
+    pass
+
+
+class TaskRead(TaskBase):
+    id: int
+    pdp_id: int
+    starting_date: str
+
+
+class TypeUpdate(TaskBase):
+    type: Union[int, None] = None
+    description: Union[str, None] = None
+    skills: Union[str, None] = None
+    chief_comment: Union[str, None] = None
+    employee_comment: Union[str, None] = None
+    status: int
+    deadline: Union[str, None] = None
