@@ -1,11 +1,11 @@
 from datetime import datetime
 from enum import Enum as Enumer
 
+from sqlalchemy.dialects.postgresql import ENUM as PgEnum
 from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
 from sqlalchemy import (
     Column,
     DateTime,
-    Enum,
     ForeignKey,
     Integer,
     String,
@@ -19,7 +19,7 @@ LENGTH_LIMITS_USER_FIELDS = 150
 LENGTH_LIMITS_LINK_FIELDS = 200
 
 
-class UserRole(Enumer):
+class UserRole(str, Enumer):
     """Выбор роли"""
 
     CHIEF = "chief"
@@ -34,7 +34,7 @@ user_user = Table(
 )
 
 
-class User(SQLAlchemyBaseUserTable, Base):
+class User(SQLAlchemyBaseUserTable[int], Base):
     """Модель пользователя"""
 
     created = Column(DateTime, default=datetime.now)
@@ -43,13 +43,9 @@ class User(SQLAlchemyBaseUserTable, Base):
     patronymic_name = Column(String(LENGTH_LIMITS_USER_FIELDS))
     position = Column(String(LENGTH_LIMITS_USER_FIELDS), nullable=False)
     role = Column(
-        Enum(UserRole).with_variant(
-            String(max(len(value.value) for value in UserRole)),
-            "sqlite",
-            "postgresql",
-        ),
+        PgEnum(UserRole, name='userrole', create_type=False),
         nullable=False,
-        default=UserRole.EMPLOYEE.value,
+        default=UserRole.EMPLOYEE,
     )
     chief = relationship(
         "User",

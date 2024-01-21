@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String
 
-from app.core.base import Base
+from app.core.db import Base
 
 LENGTH_LIMITS_TYPE_NAME_FIELD = 50
 
