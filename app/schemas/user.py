@@ -1,43 +1,32 @@
-from pydantic import EmailStr, BaseModel
+from datetime import datetime
+
+from fastapi_users.schemas import BaseUser, BaseUserCreate
+from pydantic import BaseModel
+
+from app.models.user import UserRole
 
 
-class LoginUser(BaseModel):
-    """
-    Модель для аутентификации пользователя.
-    """
-
-    email: EmailStr
-    hashed_password: str
-
-
-class Token(BaseModel):
-    """
-    Модель для выдачи токена.
-    """
-
-    email: EmailStr
-    access_token: str
-    token_type: str
-
-
-class LoginRequest(BaseModel):
-    """
-    Модель для запроса при регистрации пользователя.
-    """
-
+class UserRead(BaseUser[int]):
+    created: datetime
     first_name: str
     last_name: str
-    patronymic_name: str
-    email: EmailStr
-    hashed_password: str
+    patronymic_name: str | None = None
+    position: str
+    role: UserRole
+    photo: str | None = None
 
 
-class RegisterUser(BaseModel):
-    """
-    Модель для ответа при регистрации пользователя.
-    """
-
+class UserCreate(BaseUserCreate):
     first_name: str
     last_name: str
-    patronymic_name: str
-    email: EmailStr
+    patronymic_name: str | None = None
+    position: str
+    role: UserRole
+    photo: str | None = None
+
+
+class UserUpdate(BaseModel):
+    first_name: str | None = None
+    last_name: str | None = None
+    patronymic_name: str | None = None
+    photo: str | None = None
