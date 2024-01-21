@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Enum, String
+from sqlalchemy import Column, String
+from sqlalchemy.dialects.postgresql import ENUM as PgEnum
 
 from app.core.db import Base
 
@@ -14,10 +15,6 @@ class Status(Base):
         String(LENGTH_LIMITS_TYPE_NAME_FIELD), nullable=False, unique=True
     )
     role = Column(
-        Enum(UserRole).with_variant(
-            String(max(len(value.value) for value in UserRole)),
-            "sqlite",
-            "postgresql",
-        ),
+        PgEnum(UserRole, name='userrole', create_type=False),
         nullable=False,
     )
