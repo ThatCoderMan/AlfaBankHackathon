@@ -36,6 +36,12 @@ poetry update
   alembic upgrade head
   ```
 
+Загрузите в базу данных подготовленные данные.
+  ```
+  python .\loaddata.py
+  ```
+
+
 Для запуска сервера используйте данную команду:
   ```
   uvicorn app.main:app --reload
