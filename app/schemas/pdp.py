@@ -1,5 +1,3 @@
-from typing import Union
-
 from pydantic import BaseModel
 
 
@@ -17,7 +15,10 @@ class PDPRead(PDPBase):
     id: int
     starting_date: str
 
+    class Meta:
+        orm_mode = True
+
 
 class PDPUpdate(BaseModel):
-    goal: Union[str, None] = None
-    deadline: Union[str, None] = None
+    goal: str | None = None
+    deadline: str | None = None

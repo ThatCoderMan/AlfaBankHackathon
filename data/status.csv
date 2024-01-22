@@ -1,0 +1,7 @@
+name,role,id
+исполнено,EMPLOYEE,1
+заявка,EMPLOYEE,2
+в работе,CHIEF,3
+выполнено,CHIEF,4
+отменено,CHIEF,5
+в архиве,CHIEF,6
