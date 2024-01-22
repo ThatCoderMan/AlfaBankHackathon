@@ -1,7 +1,9 @@
 from pydantic import BaseModel
 
 
-class StatusBase(BaseModel):
+class StatusRead(BaseModel):
     id: int
     name: str
-    role: str
+
+    class Meta:
+        orm_mode = True
