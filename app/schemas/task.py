@@ -9,6 +9,7 @@ class TaskBase(BaseModel):
     chief_comment: str | None = None
     employee_comment: str | None = None
     status: int
+    starting_date: date
     deadline: date
 
 
@@ -27,10 +28,10 @@ class TaskRead(TaskBase):
 
 class TypeUpdate(TaskBase):
     type: int | None
-    description: str | None = ''
+    description: str | None
     skills: str | None
-    chief_comment: str | None = ''
-    employee_comment: str | None = ''
+    chief_comment: str | None
+    employee_comment: str | None
     status: int
     starting_date: date
-    deadline: date | None = ''
+    deadline: date | None
