@@ -9,3 +9,4 @@ repos:
                                    flake8-comprehensions, flake8-eradicate, flake8-print,
                                    flake8-broken-line, flake8-string-format ]
         files: "^app/.*\\.py$"
+        exclude: "__init__.py$"

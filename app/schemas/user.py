@@ -5,6 +5,8 @@ from pydantic import BaseModel
 
 from app.models.user import UserRole
 
+from .pdp import PDPShort
+
 
 class UserRead(BaseUser[int]):
     created: datetime
@@ -14,6 +16,7 @@ class UserRead(BaseUser[int]):
     position: str
     role: UserRole
     photo: str | None = None
+    pdp_list: list[PDPShort]
 
 
 class UserCreate(BaseUserCreate):

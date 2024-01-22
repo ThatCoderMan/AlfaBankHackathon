@@ -1,48 +1,17 @@
 from fastapi import APIRouter
 
-api_v1_router = APIRouter()
+from app.api.v1.endpoints import (
+    employee_router,
+    pdp_router,
+    task_properties_router,
+    task_router,
+)
 
+router = APIRouter()
 
-@api_v1_router.get('/main/')
-async def get_homepage():
-    return {None}
-
-
-@api_v1_router.get('/my_employees/')
-def get_employees():
-    return {None}
-
-
-@api_v1_router.get('/pdp/{pdp_id}')
-async def get_pdp():
-    return {None}
-
-
-@api_v1_router.patch('/pdp/{pdp_id}')
-async def change_pdp():
-    return {None}
-
-
-@api_v1_router.get('/pdp/{pdp_id}/{task_id}/')
-async def get_task():
-    return {None}
-
-
-@api_v1_router.post('/pdp/{pdp_id}/{task_id}/')
-async def create_task():
-    return {None}
-
-
-@api_v1_router.patch('/pdp/{pdp_id}/{task_id}/')
-async def change_task():
-    return {None}
-
-
-@api_v1_router.get('/statuses/')
-async def get_status():
-    return {None}
-
-
-@api_v1_router.get('types_of_tasks')
-async def get_type_of_task():
-    return {None}
+router.include_router(employee_router, tags=["Employees"])
+router.include_router(pdp_router, prefix="/pdp", tags=["PDPs"])
+router.include_router(task_router, prefix="/pdp/{pdp_id}", tags=["Tasks"])
+router.include_router(
+    task_properties_router, prefix='/task_properties', tags=["Task Properties"]
+)

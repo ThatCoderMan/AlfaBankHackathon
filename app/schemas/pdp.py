@@ -1,22 +1,35 @@
 from pydantic import BaseModel
 
+from .task import TaskShort
+
 
 class PDPBase(BaseModel):
-    user_id: int
     goal: str
     deadline: str
 
 
-class PDPCreate(PDPBase):
-    pass
-
-
 class PDPRead(PDPBase):
     id: int
-    starting_date: str
+    user_id: int
+    tasks: list[TaskShort]
+    done: int
+    total: int
 
     class Meta:
         orm_mode = True
+
+
+class PDPShort(PDPBase):
+    id: int
+    done: int
+    total: int
+
+    class Meta:
+        orm_mode = True
+
+
+class PDPCreate(PDPBase):
+    user_id: int
 
 
 class PDPUpdate(BaseModel):
