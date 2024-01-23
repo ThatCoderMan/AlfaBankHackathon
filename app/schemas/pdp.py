@@ -1,3 +1,5 @@
+from datetime import date
+
 from pydantic import BaseModel
 
 from .task import TaskShort
@@ -5,7 +7,7 @@ from .task import TaskShort
 
 class PDPBase(BaseModel):
     goal: str
-    deadline: str
+    deadline: date
 
 
 class PDPRead(PDPBase):

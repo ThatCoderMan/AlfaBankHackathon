@@ -3,6 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db import get_async_session
 from app.core.user import current_user
+from app.crud import pdp_crud
 from app.models import User
 from app.schemas import PDPRead, PDPUpdate
 
@@ -10,25 +11,35 @@ router = APIRouter()
 
 
 @router.get(
-    '/{pdp_id}',
+    '/my',
     response_model=PDPRead,
 )
-async def get_pdp(
-    pdp_id: int,
+async def get_my_pdp(
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(current_user),
 ):
-    return {None}
+    data = await pdp_crud.get_by_user_id(session=session, user_id=user.id)
+    return data
+
+
+@router.get(
+    '/{pdp_id}', response_model=PDPRead, dependencies=[Depends(current_user)]
+)
+async def get_pdp(
+    pdp_id: int, session: AsyncSession = Depends(get_async_session)
+):
+    data = await pdp_crud.get(session=session, pdp_id=pdp_id)
+    return data
 
 
 @router.patch(
-    '/{pdp_id}',
-    response_model=PDPRead,
+    '/{pdp_id}', response_model=PDPRead, dependencies=[Depends(current_user)]
 )
 async def change_pdp(
     pdp_id: int,
-    pdp_obj: PDPUpdate,
+    pdp_in: PDPUpdate,
     session: AsyncSession = Depends(get_async_session),
-    user: User = Depends(current_user),
 ):
-    return {None}
+    pdp_db = await pdp_crud.get(session=session, pdp_id=pdp_id)
+    data = await pdp_crud.update(session=session, db_obj=pdp_db, obj_in=pdp_in)
+    return data
