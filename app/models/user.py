@@ -1,16 +1,9 @@
 from datetime import datetime
 from enum import Enum as Enumer
 
-from sqlalchemy.dialects.postgresql import ENUM as PgEnum
 from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
-from sqlalchemy import (
-    Column,
-    DateTime,
-    ForeignKey,
-    Integer,
-    String,
-    Table,
-)
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Table
+from sqlalchemy.dialects.postgresql import ENUM as PgEnum
 from sqlalchemy.orm import relationship
 
 from app.core.db import Base
@@ -60,3 +53,5 @@ class User(SQLAlchemyBaseUserTable[int], Base):
         foreign_keys=[user_user.c.user_id],
     )
     photo = Column(String(LENGTH_LIMITS_LINK_FIELDS))
+
+    pdp = relationship("PDP", back_populates="user")
