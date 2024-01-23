@@ -31,8 +31,8 @@ class TaskShort(TaskBase):
 
 
 class TaskCreate(TaskBase):
-    type: int
-    status: int
+    type_id: int
+    status_id: int
     description: str | None
     skills: str | None
     chief_comment: str | None = None
@@ -40,8 +40,8 @@ class TaskCreate(TaskBase):
 
 
 class TaskUpdate(TaskBase):
-    type: int | None
-    status: int | None
+    type_id: int | None
+    status_id: int | None
     description: str | None
     skills: str | None
     chief_comment: str | None

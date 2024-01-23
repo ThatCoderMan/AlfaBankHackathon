@@ -1,5 +1,6 @@
 from sqlalchemy import Column, String
 from sqlalchemy.dialects.postgresql import ENUM as PgEnum
+from sqlalchemy.orm import relationship
 
 from app.core.db import Base
 
@@ -18,3 +19,5 @@ class Status(Base):
         PgEnum(UserRole, name='userrole', create_type=False),
         nullable=False,
     )
+
+    tasks = relationship("Task", back_populates="status")
