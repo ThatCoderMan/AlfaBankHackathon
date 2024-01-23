@@ -13,4 +13,4 @@ class PDP(AbstractDatesModel):
     goal = Column(String(LENGTH_LIMITS_STRING_FIELDS), nullable=False)
 
     tasks = relationship("Task", back_populates="pdp")
-    user = relationship("User", back_populates="pdp")
+    user = relationship("User", back_populates="pdp", uselist=False)
