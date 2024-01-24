@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db import get_async_session
 from app.core.user import current_user
-from app.models import User
+from app.models import Status, Type, User
 from app.schemas import StatusRead, TypeRead
 
 router = APIRouter()
@@ -15,9 +16,12 @@ router = APIRouter()
 )
 async def get_status(
     session: AsyncSession = Depends(get_async_session),
-    user: User = Depends(current_user),
+    current_user: User = Depends(current_user),
 ):
-    return {None}
+    statuses = await session.execute(
+        select(Status).where(Status.role == current_user.role)
+    )
+    return statuses.scalars().all()
 
 
 @router.get(
@@ -26,6 +30,6 @@ async def get_status(
 )
 async def get_type_of_task(
     session: AsyncSession = Depends(get_async_session),
-    user: User = Depends(current_user),
 ):
-    return {None}
+    types = await session.execute(select(Type))
+    return types.scalars().all()
