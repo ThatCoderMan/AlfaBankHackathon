@@ -6,14 +6,14 @@ from .task_properties import StatusRead, TypeRead
 
 
 class TaskBase(BaseModel):
-    type: TypeRead
-    status: StatusRead
     starting_date: date
     deadline: date
 
 
 class TaskRead(TaskBase):
     id: int
+    type: TypeRead
+    status: StatusRead
     description: str | None
     skills: str | None
     chief_comment: str | None
@@ -25,12 +25,15 @@ class TaskRead(TaskBase):
 
 class TaskShort(TaskBase):
     id: int
+    type: TypeRead
+    status: StatusRead
 
     class Meta:
         orm_mode = True
 
 
 class TaskCreate(TaskBase):
+    pdp_id: int
     type_id: int
     status_id: int
     description: str | None
@@ -40,11 +43,11 @@ class TaskCreate(TaskBase):
 
 
 class TaskUpdate(TaskBase):
-    type_id: int | None
-    status_id: int | None
-    description: str | None
-    skills: str | None
-    chief_comment: str | None
-    employee_comment: str | None
-    starting_date: date | None
-    deadline: date | None
+    type_id: int | None = None
+    status_id: int | None = None
+    description: str | None = None
+    skills: str | None = None
+    chief_comment: str | None = None
+    employee_comment: str | None = None
+    starting_date: date | None = None
+    deadline: date | None = None
