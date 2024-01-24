@@ -1,4 +1,4 @@
-# flake8: ignore
+# flake8: noqa
 from .employee import router as employee_router
 from .pdp import router as pdp_router
 from .task import router as task_router
