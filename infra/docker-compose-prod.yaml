@@ -23,16 +23,5 @@ services:
   #   command: cp -r /app/build/. /frontend_static/
   #   volumes:
   #     - static_volume:/frontend_static
-  gateway:
-      image: ${DOCKERHUB_USERNAME}/${DOCKERHUB_NGINX}:latest
-      env_file: .env
-      volumes:
-        - /etc/letsencrypt:/etc/letsencrypt
-        - static_volume:/staticfiles/
-      ports:
-        - 80:80
-        - 443:443
-      depends_on:
-      - db
-      - backend
-      # - frontend
+  #   depends_on:
+  #     - db
