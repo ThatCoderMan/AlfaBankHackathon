@@ -54,4 +54,4 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     )
     photo = Column(String(LENGTH_LIMITS_LINK_FIELDS))
 
-    pdp = relationship("PDP", back_populates="user")
+    pdp = relationship("PDP", back_populates="user", uselist=False)

@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from fastapi_users.schemas import BaseUser, BaseUserCreate
 from pydantic import BaseModel
 
@@ -9,14 +7,23 @@ from .pdp import PDPShort
 
 
 class UserRead(BaseUser[int]):
-    created: datetime
     first_name: str
     last_name: str
     patronymic_name: str | None = None
     position: str
     role: UserRole
     photo: str | None = None
-    pdp_list: list[PDPShort]
+
+
+class UserShort(BaseModel):
+    id: int
+    first_name: str
+    last_name: str
+    patronymic_name: str | None = None
+    position: str
+    role: UserRole
+    photo: str | None = None
+    pdp: PDPShort
 
 
 class UserCreate(BaseUserCreate):

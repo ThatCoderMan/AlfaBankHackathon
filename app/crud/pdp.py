@@ -1,32 +1,46 @@
-from sqlalchemy import alias, func, select
+from sqlalchemy import Result, Select, alias, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import aliased, joinedload
+from sqlalchemy.sql.elements import BinaryExpression
 
 from app.models import PDP, Status, Task
 
 from .base import CRUDBase
+from .mixin import StatisticMixin
+
+status_alias = aliased(Status)
+task_alias = aliased(Task)
 
 
-class CRUDpdp(CRUDBase):
+class CRUDpdp(CRUDBase, StatisticMixin):
     @staticmethod
-    def _add_statistic(pdp: PDP, done: int, total: int) -> PDP:
-        pdp.__setattr__('done', done)
-        pdp.__setattr__('total', total)
-        return pdp
+    async def __get_execute(
+        session: AsyncSession,
+        where_option: BinaryExpression,
+        done_subquery: Select,
+        total_subquery: Select,
+    ) -> Result:
+        return await session.execute(
+            select(PDP, done_subquery, total_subquery)
+            .options(joinedload(PDP.tasks))
+            .options(
+                joinedload(PDP.tasks).joinedload(Task.type),
+                joinedload(PDP.tasks).joinedload(Task.status),
+            )
+            .where(where_option)
+            .order_by(alias(task_alias, name='task_2').c.status_id)
+        )
 
     async def get_by_user_id(
         self,
         user_id: int,
         session: AsyncSession,
     ):
-        status_alias = aliased(Status)
-        task_alias = aliased(Task)
-
         done_subquery = (
             select(func.count())
             .select_from(PDP)
             .join(task_alias, task_alias.pdp_id == PDP.id)
-            .where(self.model.user_id == user_id)
+            .where(PDP.user_id == user_id)
             .join(status_alias, status_alias.id == task_alias.status_id)
             .where(
                 status_alias.name.in_(["исполнено", "выполнено", "отменено"])
@@ -37,35 +51,28 @@ class CRUDpdp(CRUDBase):
             select(func.count())
             .select_from(PDP)
             .join(task_alias, task_alias.pdp_id == PDP.id)
-            .where(self.model.user_id == user_id)
+            .where(PDP.user_id == user_id)
             .label("total")
         )
-        db_obj = await session.execute(
-            select(self.model, done_subquery, total_subquery)
-            .options(joinedload(PDP.tasks))
-            .options(
-                joinedload(PDP.tasks).joinedload(Task.type),
-                joinedload(PDP.tasks).joinedload(Task.status),
-            )
-            .where(self.model.user_id == user_id)
-            .order_by(alias(task_alias, name='task_2').c.status_id)
+        result = await self.__get_execute(
+            session=session,
+            where_option=PDP.user_id == user_id,
+            done_subquery=done_subquery,
+            total_subquery=total_subquery,
         )
-        row = db_obj.first()
-        return self._add_statistic(*row)
+        dpd_obj = result.first()
+        return self._add_statistic_to_dpd(*dpd_obj)
 
     async def get(
         self,
         pdp_id: int,
         session: AsyncSession,
     ):
-        status_alias = aliased(Status)
-        task_alias = aliased(Task)
-
         done_subquery = (
             select(func.count())
             .select_from(PDP)
             .join(task_alias, task_alias.pdp_id == pdp_id)
-            .where(self.model.id == pdp_id)
+            .where(PDP.id == pdp_id)
             .join(status_alias, status_alias.id == task_alias.status_id)
             .where(
                 status_alias.name.in_(["исполнено", "выполнено", "отменено"])
@@ -76,21 +83,18 @@ class CRUDpdp(CRUDBase):
             select(func.count())
             .select_from(PDP)
             .join(task_alias, task_alias.pdp_id == pdp_id)
-            .where(self.model.id == pdp_id)
+            .where(PDP.id == pdp_id)
             .label("total")
         )
-        db_obj = await session.execute(
-            select(self.model, done_subquery, total_subquery)
-            .options(joinedload(PDP.tasks))
-            .options(
-                joinedload(PDP.tasks).joinedload(Task.type),
-                joinedload(PDP.tasks).joinedload(Task.status),
-            )
-            .where(self.model.id == pdp_id)
-            .order_by(alias(task_alias, name='task_2').c.status_id)
+
+        result = await self.__get_execute(
+            session=session,
+            where_option=PDP.id == pdp_id,
+            done_subquery=done_subquery,
+            total_subquery=total_subquery,
         )
-        row = db_obj.first()
-        return self._add_statistic(*row)
+        dpd_obj = result.first()
+        return self._add_statistic_to_dpd(*dpd_obj)
 
 
 pdp_crud = CRUDpdp(PDP)
