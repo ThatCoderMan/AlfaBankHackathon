@@ -1,13 +1,13 @@
 from datetime import date
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from .task import TaskShort
 
 
 class PDPBase(BaseModel):
-    goal: str
-    deadline: date
+    goal: str = Field(max_length=100)
+    deadline: date = Field(min_value=date.today())
 
 
 class PDPRead(PDPBase):
@@ -36,4 +36,4 @@ class PDPCreate(PDPBase):
 
 class PDPUpdate(BaseModel):
     goal: str | None = None
-    deadline: str | None = None
+    deadline: date | None
