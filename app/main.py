@@ -8,11 +8,12 @@ from app.core.config import settings
 tags_metadata = [
     {"name": "Employees", "description": "Работа с сотрудниками"},
     {"name": "PDPs", "description": "Работа с ИПР"},
-    {"name": "Tasks", "description": "Работа с ИПР"},
+    {"name": "Tasks", "description": "Работа с Задачами"},
     {
         "name": "Task Properties",
         "description": "Получение статусов и типов задач",
     },
+    {"name": "Templates", "description": "Работа с шаблонами"},
 ]
 
 app = FastAPI(

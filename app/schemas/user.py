@@ -26,6 +26,16 @@ class UserShort(BaseModel):
     pdp: PDPShort
 
 
+class UserInfo(BaseModel):
+    id: int
+    first_name: str
+    last_name: str
+    patronymic_name: str | None = None
+    position: str
+    role: UserRole
+    photo: str | None = None
+
+
 class UserCreate(BaseUserCreate):
     first_name: str
     last_name: str
