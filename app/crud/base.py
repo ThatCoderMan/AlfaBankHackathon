@@ -21,13 +21,9 @@ class CRUDBase:
         db_objs = await session.execute(select(self.model))
         return db_objs.scalars().all()
 
-    async def create(
-        self,
-        obj_in,
-        session: AsyncSession,
-    ):
+    async def create(self, obj_in, session: AsyncSession, **extra_fields):
         obj_in_data = obj_in.dict()
-        db_obj = self.model(**obj_in_data)
+        db_obj = self.model(**obj_in_data, **extra_fields)
         session.add(db_obj)
         await session.commit()
         await session.refresh(db_obj)
