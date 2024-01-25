@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.api.validators import get_or_404, only_chief
 from app.core.db import get_async_session
 from app.core.user import current_user
 from app.crud.task import task_crud
@@ -14,7 +15,7 @@ router = APIRouter()
 async def get_task(
     task_id: int,
     session: AsyncSession = Depends(get_async_session),
-    user: User = Depends(current_user),
+    user: User = Depends(only_chief)
 ):
     return await task_crud.get(task_id=task_id, session=session)
 
@@ -25,7 +26,8 @@ async def create_task(
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(current_user),
 ):
-    task_obj = await task_crud.create(session=session, obj_in=task_in)
+    task_obj_in = await get_or_404(task_in, session=session)
+    task_obj = await task_crud.create(session=session, obj_in=task_obj_in)
     return await task_crud.get(session=session, task_id=task_obj.id)
 
 

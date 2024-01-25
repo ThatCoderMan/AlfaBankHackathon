@@ -1,3 +1,4 @@
+from fastapi import HTTPException, status
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -27,7 +28,12 @@ class CRUDBase:
         session: AsyncSession,
     ):
         obj_in_data = obj_in.dict()
-        db_obj = self.model(**obj_in_data)
+
+        try:
+            db_obj = self.model(**obj_in_data)
+        except AttributeError:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+
         session.add(db_obj)
         await session.commit()
         await session.refresh(db_obj)
