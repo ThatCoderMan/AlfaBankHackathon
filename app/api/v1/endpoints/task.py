@@ -3,6 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db import get_async_session
 from app.core.user import current_user
+from app.crud.task import task_crud
 from app.models import User
 from app.schemas import TaskCreate, TaskRead, TaskUpdate
 
@@ -11,23 +12,21 @@ router = APIRouter()
 
 @router.get('/{task_id}', response_model=TaskRead)
 async def get_task(
-    pdp_id: int,
     task_id: int,
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(current_user),
 ):
-    return {None}
+    return await task_crud.get(task_id=task_id, session=session)
 
 
-@router.post('/{task_id}', response_model=TaskRead)
+@router.post('/', response_model=TaskRead)
 async def create_task(
-    pdp_id: int,
-    task_id: int,
-    task_obj: TaskCreate,
+    task_in: TaskCreate,
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(current_user),
 ):
-    return {None}
+    task_obj = await task_crud.create(session=session, obj_in=task_in)
+    return await task_crud.get(session=session, task_id=task_obj.id)
 
 
 @router.patch(
@@ -35,10 +34,12 @@ async def create_task(
     response_model=TaskRead,
 )
 async def change_task(
-    pdp_id: int,
     task_id: int,
-    task_obj: TaskUpdate,
+    task_in: TaskUpdate,
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(current_user),
 ):
-    return {None}
+    task_db = await task_crud.get(task_id=task_id, session=session)
+    return await task_crud.update(
+        session=session, obj_in=task_in, db_obj=task_db
+    )
