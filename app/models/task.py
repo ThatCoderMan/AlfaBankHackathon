@@ -13,6 +13,7 @@ class Task(AbstractDatesModel):
     pdp_id = Column(Integer, ForeignKey("pdp.id"))
     type_id = Column(Integer, ForeignKey("type.id"))
     status_id = Column(Integer, ForeignKey("status.id"))
+    title = Column(String(LENGTH_LIMITS_STRING_FIELDS), nullable=False)
     description = Column(Text, nullable=False)
     skills = Column(String(LENGTH_LIMITS_STRING_FIELDS), nullable=False)
     chief_comment = Column(Text)

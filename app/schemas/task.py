@@ -6,6 +6,7 @@ from .task_properties import StatusRead, TypeRead
 
 
 class TaskBase(BaseModel):
+    title: str
     starting_date: date
     deadline: date
 
@@ -44,6 +45,7 @@ class TaskCreate(TaskBase):
 
 class TaskUpdate(TaskBase):
     type_id: int | None = None
+    title: str | None = None
     status_id: int | None = None
     description: str | None = None
     skills: str | None = None
