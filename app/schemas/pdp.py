@@ -36,4 +36,4 @@ class PDPCreate(PDPBase):
 
 class PDPUpdate(BaseModel):
     goal: str | None = None
-    deadline: str | None = None
+    deadline: date | None = None
