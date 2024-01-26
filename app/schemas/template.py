@@ -37,7 +37,7 @@ class TemplateShort(TemplateBase):
 
 class TemplateCreate(TemplateBase):
     description: str
-    skills: str
+    skills: set[str]
     direction_id: int = 1
     grade_id: int = 1
     type_id: int = 1
@@ -48,7 +48,7 @@ class TemplateCreate(TemplateBase):
 class TemplateUpdate(TemplateBase):
     title: str | None = None
     description: str | None = None
-    skills: list[str] | None = None
+    skills: set[str] | None = None
     direction_id: int | None = None
     grade_id: int | None = None
     type_id: int | None = None

@@ -27,7 +27,7 @@ class Template(Base):
     recommendation = Column(Text)
 
     skills = relationship(
-        'Skill', secondary='template_id', back_populates='templates'
+        'Skill', secondary='template_skill', back_populates='templates'
     )
 
     type = relationship("Type", back_populates="templates", uselist=False)

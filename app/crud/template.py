@@ -4,6 +4,7 @@ from sqlalchemy.orm import joinedload
 
 from app.models import Template
 
+from . import skill_crud
 from .base import CRUDBase
 
 
@@ -25,7 +26,29 @@ class CRUDTemplate(CRUDBase):
         )
         return result.scalars().first()
 
-    pass
+    async def update(
+        self,
+        db_obj,
+        obj_in,
+        session: AsyncSession,
+    ):
+        obj_in.skills = await skill_crud.get_or_create_many(
+            session=session, skill_names=obj_in.skills
+        )
+        await session.refresh(db_obj)
+        db_template = await super().update(
+            obj_in=obj_in, db_obj=db_obj, session=session
+        )
+        return db_template
+
+    async def create(self, obj_in, session: AsyncSession, **extra_fields):
+        obj_in.skills = await skill_crud.get_or_create_many(
+            session=session, skill_names=obj_in.skills
+        )
+        db_template = await super().create(
+            obj_in=obj_in, session=session, **extra_fields
+        )
+        return db_template
 
 
 template_crud = CRUDTemplate(Template)
