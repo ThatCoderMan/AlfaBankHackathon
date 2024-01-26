@@ -27,7 +27,8 @@ class CRUDTask(CRUDBase):
         result = db_obj.scalars().first()
 
         if result is None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                                detail=f'Task {task_id} not found')
 
         return result
 
