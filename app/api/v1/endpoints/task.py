@@ -35,8 +35,7 @@ async def create_task(
         task_in: TaskCreate,
         session: AsyncSession = Depends(get_async_session),
 ):
-    task_obj_in = await get_or_404(task_in, session=session)
-    task_obj = await task_crud.create(session=session, obj_in=task_obj_in)
+    task_obj = await task_crud.create(session=session, obj_in=task_in)
     return await task_crud.get(session=session, task_id=task_obj.id)
 
 
