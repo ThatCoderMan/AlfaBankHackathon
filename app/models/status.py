@@ -3,10 +3,8 @@ from sqlalchemy.dialects.postgresql import ENUM as PgEnum
 from sqlalchemy.orm import relationship
 
 from app.core.db import Base
-
+from core.constants import LENGTH_LIMITS_STATUS_NAME_FIELD
 from .user import UserRole
-
-LENGTH_LIMITS_STATUS_NAME_FIELD = 50
 
 
 class Status(Base):

@@ -2,9 +2,7 @@ from sqlalchemy import Column, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
 
 from .base import AbstractDatesModel
-
-LENGTH_LIMITS_STRING_FIELDS = 100
-LENGTH_LIMITS_TEXT_FIELDS = 255
+from core.constants import LENGTH_LIMITS_STRING_FIELDS
 
 
 class Task(AbstractDatesModel):

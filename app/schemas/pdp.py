@@ -2,12 +2,13 @@ from datetime import date
 
 from pydantic import BaseModel, Field
 
+from core.constants import LENGTH_LIMITS_STRING_FIELDS
 from .task import TaskShort
 
 
 class PDPBase(BaseModel):
-    goal: str = Field(max_length=100)
-    deadline: date = Field(min_value=date.today())
+    goal: str = Field(max_length=LENGTH_LIMITS_STRING_FIELDS)
+    deadline: date
 
 
 class PDPRead(PDPBase):
@@ -32,8 +33,10 @@ class PDPShort(PDPBase):
 
 class PDPCreate(PDPBase):
     user_id: int
+    deadline: date = Field(min_value=date.today())
 
 
 class PDPUpdate(BaseModel):
-    goal: str | None = None
-    deadline: date | None
+    goal: str = Field(None, max_length=LENGTH_LIMITS_STRING_FIELDS)
+    starting_date: date = Field(None, min_value=date.today())
+    deadline: date = Field(None, min_value=date.today())
