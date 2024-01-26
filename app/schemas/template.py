@@ -11,8 +11,8 @@ class TemplateBase(BaseModel):
 
 class TemplateRead(TemplateBase):
     id: int
-    description: str | None
-    skills: str | None
+    description: str
+    skills: list[str] | None
     user: UserInfo
     direction: DirectionRead
     grade: GradeRead
@@ -36,11 +36,11 @@ class TemplateShort(TemplateBase):
 
 
 class TemplateCreate(TemplateBase):
-    description: str | None
-    skills: str | None
-    direction_id: int
-    grade_id: int
-    type_id: int
+    description: str
+    skills: str
+    direction_id: int = 1
+    grade_id: int = 1
+    type_id: int = 1
     duration: int | None
     recommendation: str | None
 
@@ -48,7 +48,7 @@ class TemplateCreate(TemplateBase):
 class TemplateUpdate(TemplateBase):
     title: str | None = None
     description: str | None = None
-    skills: str | None = None
+    skills: list[str] | None = None
     direction_id: int | None = None
     grade_id: int | None = None
     type_id: int | None = None

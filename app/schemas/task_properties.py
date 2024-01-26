@@ -15,3 +15,11 @@ class StatusRead(BaseModel):
 
     class Meta:
         orm_mode = True
+
+
+class SkillRead(BaseModel):
+    id: int
+    name = str
+
+    class Meta:
+        orm_mode = True
