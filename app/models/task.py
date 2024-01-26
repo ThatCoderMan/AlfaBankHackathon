@@ -1,10 +1,19 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, Text
+from sqlalchemy import Column, ForeignKey, Integer, String, Table, Text
 from sqlalchemy.orm import relationship
+
+from app.core.db import Base
 
 from .base import AbstractDatesModel
 
 LENGTH_LIMITS_STRING_FIELDS = 100
 LENGTH_LIMITS_TEXT_FIELDS = 255
+
+task_skill = Table(
+    "task_skill",
+    Base.metadata,
+    Column("task_id", Integer, ForeignKey("task.id")),
+    Column("skill_id", Integer, ForeignKey("skill.id")),
+)
 
 
 class Task(AbstractDatesModel):
@@ -15,10 +24,12 @@ class Task(AbstractDatesModel):
     status_id = Column(Integer, ForeignKey("status.id"))
     title = Column(String(LENGTH_LIMITS_STRING_FIELDS), nullable=False)
     description = Column(Text, nullable=False)
-    skills = Column(String(LENGTH_LIMITS_STRING_FIELDS), nullable=False)
     chief_comment = Column(Text)
     employee_comment = Column(Text)
 
+    skills = relationship(
+        'Skill', secondary='task_skill', back_populates='tasks'
+    )
     pdp = relationship("PDP", back_populates="tasks")
     type = relationship("Type", back_populates="tasks")
     status = relationship("Status", back_populates="tasks")

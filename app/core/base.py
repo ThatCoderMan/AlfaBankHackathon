@@ -4,6 +4,7 @@ from app.models import (
     PDP,
     Direction,
     Grade,
+    Skill,
     Status,
     Task,
     Template,

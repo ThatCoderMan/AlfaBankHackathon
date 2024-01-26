@@ -2,6 +2,7 @@
 from .direction import Direction
 from .grade import Grade
 from .pdp import PDP
+from .skill import Skill
 from .status import Status
 from .task import Task
 from .template import Template
