@@ -1,6 +1,7 @@
 from fastapi import HTTPException, status
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
@@ -29,13 +30,18 @@ class CRUDBase:
     ):
         obj_in_data = obj_in.dict()
 
-        try:
-            db_obj = self.model(**obj_in_data)
-        except AttributeError:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+        db_obj = self.model(**obj_in_data)
 
-        session.add(db_obj)
-        await session.commit()
+        try:
+            session.add(db_obj)
+            await session.commit()
+        except IntegrityError as e:
+            error_message = str(e.orig) if e.orig else str(e)
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=error_message.split(':')[2].strip()
+            )
+
         await session.refresh(db_obj)
         return db_obj
 
