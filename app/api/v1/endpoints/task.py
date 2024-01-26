@@ -10,6 +10,8 @@ from app.schemas import TaskCreate, TaskRead, TaskUpdate
 router = APIRouter()
 
 
+# Todo: permission У текущего пользователя есть доступ к задаче
+#  (шеф или сотрудник) таск_id == user_id and role == chief где его сотрудники
 @router.get('/{task_id}', response_model=TaskRead,
             dependencies=[Depends(current_user)])
 async def get_task(
@@ -19,8 +21,10 @@ async def get_task(
     return await task_crud.get(task_id=task_id, session=session)
 
 
+# Todo: проверка полей при создании руководителем,
+#  или сотрудником, меняются поля создания задачи
 @router.post('/', response_model=TaskRead,
-             dependencies=[Depends(only_chief_accesses)])
+             dependencies=[Depends(current_user)])
 async def create_task(
         task_in: TaskCreate,
         session: AsyncSession = Depends(get_async_session),
@@ -29,6 +33,7 @@ async def create_task(
     return await task_crud.get(session=session, task_id=task_obj.id)
 
 
+# Todo: Проверка полей редактирования в зависимости от роли.
 @router.patch(
     '/{task_id}',
     response_model=TaskRead,
