@@ -62,6 +62,9 @@ class CRUDpdp(CRUDBase, StatisticMixin):
             total_subquery=total_subquery,
         )
         dpd_obj = result.first()
+        if dpd_obj is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+
         return self._add_statistic_to_dpd(*dpd_obj)
 
     async def get(
