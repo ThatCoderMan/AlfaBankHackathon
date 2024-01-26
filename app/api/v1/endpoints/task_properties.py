@@ -3,9 +3,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db import get_async_session
 from app.core.user import current_user
-from app.crud import status_crud, type_crud
+from app.crud import skill_crud, status_crud, type_crud
 from app.models import User
-from app.schemas import StatusRead, TypeRead
+from app.schemas import SkillRead, StatusRead, TypeRead
 
 router = APIRouter()
 
@@ -31,3 +31,15 @@ async def get_type_of_task(
 ):
     types = await type_crud.get_multi(session=session)
     return types
+
+
+@router.get(
+    '/skills/',
+    response_model=list[SkillRead],
+)
+async def get_skills(
+    q: str = "",
+    session: AsyncSession = Depends(get_async_session),
+):
+    skills = await skill_crud.get_by_query(session=session, query=q)
+    return skills

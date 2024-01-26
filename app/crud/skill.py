@@ -10,6 +10,12 @@ from .base import CRUDBase
 
 
 class CRUDSkill(CRUDBase):
+    async def get_by_query(self, session: AsyncSession, query: str):
+        skills = await session.execute(
+            select(Skill).where(Skill.name.ilike(f"{query}%"))
+        )
+        return skills.scalars().all()
+
     async def get_by_names_many(
         self, session: AsyncSession, skill_names: list[str]
     ) -> Sequence[Skill]:
