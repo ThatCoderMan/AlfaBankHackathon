@@ -17,6 +17,7 @@ class TaskRead(TaskBase):
     status: StatusRead
     description: str | None
     skills: list[SkillRead] | None
+    link: str | None
     chief_comment: str | None
     employee_comment: str | None
 
@@ -39,6 +40,7 @@ class TaskCreate(TaskBase):
     status_id: int
     description: str | None
     skills: list[str] | None = None
+    link: str | None = None
     chief_comment: str | None = None
     employee_comment: str | None = None
 
@@ -49,6 +51,7 @@ class TaskUpdate(TaskBase):
     status_id: int | None = None
     description: str | None = None
     skills: list[str] | None = None
+    link: str | None = None
     chief_comment: str | None = None
     employee_comment: str | None = None
     starting_date: date | None = None

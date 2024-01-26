@@ -17,6 +17,7 @@ class TemplateRead(TemplateBase):
     direction: DirectionRead
     grade: GradeRead
     type: TypeRead
+    link: str | None
     duration: int | None
     recommendation: str | None
 
@@ -41,6 +42,7 @@ class TemplateCreate(TemplateBase):
     direction_id: int = 1
     grade_id: int = 1
     type_id: int = 1
+    link: str | None
     duration: int | None
     recommendation: str | None
 
@@ -52,5 +54,6 @@ class TemplateUpdate(TemplateBase):
     direction_id: int | None = None
     grade_id: int | None = None
     type_id: int | None = None
+    link: str | None = None
     duration: int | None = None
     recommendation: str | None = None

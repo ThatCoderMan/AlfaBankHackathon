@@ -12,7 +12,7 @@ LENGTH_LIMITS_TYPE_NAME_FIELD = 50
 class Status(Base):
     """Модель навыков"""
 
-    name = Column(
+    value = Column(
         String(LENGTH_LIMITS_TYPE_NAME_FIELD), nullable=False, unique=True
     )
     role = Column(

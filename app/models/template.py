@@ -23,6 +23,7 @@ class Template(Base):
     direction_id = Column(Integer, ForeignKey("direction.id"), nullable=False)
     grade_id = Column(Integer, ForeignKey("grade.id"), nullable=False)
     type_id = Column(Integer, ForeignKey("type.id"), nullable=False)
+    link = Column(String(LENGTH_LIMITS_STRING_FIELDS))
     duration = Column(Integer)
     recommendation = Column(Text)
 

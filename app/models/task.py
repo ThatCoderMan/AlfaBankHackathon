@@ -6,7 +6,6 @@ from app.core.db import Base
 from .base import AbstractDatesModel
 
 LENGTH_LIMITS_STRING_FIELDS = 100
-LENGTH_LIMITS_TEXT_FIELDS = 255
 
 task_skill = Table(
     "task_skill",
@@ -24,6 +23,7 @@ class Task(AbstractDatesModel):
     status_id = Column(Integer, ForeignKey("status.id"))
     title = Column(String(LENGTH_LIMITS_STRING_FIELDS), nullable=False)
     description = Column(Text, nullable=False)
+    link = Column(String(LENGTH_LIMITS_STRING_FIELDS))
     chief_comment = Column(Text)
     employee_comment = Column(Text)
 

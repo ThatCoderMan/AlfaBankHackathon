@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 class DirectionRead(BaseModel):
     id: int
-    name: str
+    value: str
 
     class Meta:
         orm_mode = True
@@ -11,7 +11,7 @@ class DirectionRead(BaseModel):
 
 class GradeRead(BaseModel):
     id: int
-    name: str
+    value: str
 
     class Meta:
         orm_mode = True

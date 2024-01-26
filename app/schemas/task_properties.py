@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 class TypeRead(BaseModel):
     id: int
-    name: str
+    value: str
 
     class Meta:
         orm_mode = True
@@ -11,7 +11,7 @@ class TypeRead(BaseModel):
 
 class StatusRead(BaseModel):
     id: int
-    name: str
+    value: str
 
     class Meta:
         orm_mode = True
@@ -19,7 +19,7 @@ class StatusRead(BaseModel):
 
 class SkillRead(BaseModel):
     id: int
-    name: str
+    value: str
 
     class Meta:
         orm_mode = True

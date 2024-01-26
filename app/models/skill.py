@@ -7,7 +7,7 @@ LENGTH_LIMITS_SKILL_NAME_FIELD = 30
 
 
 class Skill(Base):
-    name = Column(
+    value = Column(
         String(LENGTH_LIMITS_SKILL_NAME_FIELD), nullable=False, unique=True
     )
 

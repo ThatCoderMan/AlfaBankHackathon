@@ -33,7 +33,7 @@ class CRUDTemplate(CRUDBase):
         session: AsyncSession,
     ):
         obj_in.skills = await skill_crud.get_or_create_many(
-            session=session, skill_names=obj_in.skills
+            session=session, skill_values=obj_in.skills
         )
         await session.refresh(db_obj)
         db_template = await super().update(
@@ -43,7 +43,7 @@ class CRUDTemplate(CRUDBase):
 
     async def create(self, obj_in, session: AsyncSession, **extra_fields):
         obj_in.skills = await skill_crud.get_or_create_many(
-            session=session, skill_names=obj_in.skills
+            session=session, skill_values=obj_in.skills
         )
         db_template = await super().create(
             obj_in=obj_in, session=session, **extra_fields
