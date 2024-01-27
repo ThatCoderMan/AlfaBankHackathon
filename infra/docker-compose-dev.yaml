@@ -5,7 +5,6 @@ services:
     restart: always
     ports:
       - "5432:5432"
-    container_name: db
     volumes:
       - db_value:/var/lib/postgresql/data/
     environment:
@@ -13,5 +12,25 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
 
+#  backend:
+#    build: ../
+#    env_file: .env
+#    volumes:
+#      - static_volume:/backend_static
+#    ports:
+#      - "8000:8000"
+#    depends_on:
+#      - db
+
+#  frontend:
+#    image: milenium666/alfa:latest#v0.0.1
+#    env_file: .env
+#    command: cp -r /app/build/. /frontend_static/
+#    volumes:
+#      - static_volume:/frontend_static
+#    depends_on:
+#      - db
+
 volumes:
   db_value:
+  static_volume:
