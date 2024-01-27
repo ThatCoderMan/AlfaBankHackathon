@@ -1,6 +1,6 @@
 from datetime import date
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, PositiveInt
 
 from core.constants import LENGTH_LIMITS_STRING_FIELDS
 from .task import TaskShort
@@ -12,8 +12,8 @@ class PDPBase(BaseModel):
 
 
 class PDPRead(PDPBase):
-    id: int
-    user_id: int
+    id: PositiveInt
+    user_id: int = 1
     tasks: list[TaskShort]
     done: int
     total: int
@@ -23,7 +23,7 @@ class PDPRead(PDPBase):
 
 
 class PDPShort(PDPBase):
-    id: int
+    id: PositiveInt
     done: int
     total: int
 
@@ -32,7 +32,7 @@ class PDPShort(PDPBase):
 
 
 class PDPCreate(PDPBase):
-    user_id: int
+    user_id: PositiveInt = 1
     deadline: date = Field(min_value=date.today())
 
 

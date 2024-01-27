@@ -1,5 +1,5 @@
 # flake8: noqa
-from .pdp import LENGTH_LIMITS_STRING_FIELDS, PDP
+from .pdp import PDP
 from .status import Status
 from .task import Task
 from .type import Type
