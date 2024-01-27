@@ -36,6 +36,8 @@ async def get_pdp(
     return data
 
 # Todo : Руководитель и его сторудник
+
+
 @router.patch(
     '/{pdp_id}',
     response_model=PDPRead,

@@ -10,7 +10,6 @@ from app.schemas import UserShort
 router = APIRouter()
 
 
-# Todo : Только Руководитель, видит список своих сотрудников
 @router.get(
     '/employees',
     response_model=list[UserShort],
