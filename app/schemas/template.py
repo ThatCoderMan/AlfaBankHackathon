@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from .task_properties import TypeRead
+from .task_properties import SkillRead, TypeRead
 from .template_properties import DirectionRead, GradeRead
 from .user import UserInfo
 
@@ -12,7 +12,7 @@ class TemplateBase(BaseModel):
 class TemplateRead(TemplateBase):
     id: int
     description: str
-    skills: list[str] | None
+    skills: list[SkillRead] | None
     user: UserInfo
     direction: DirectionRead
     grade: GradeRead

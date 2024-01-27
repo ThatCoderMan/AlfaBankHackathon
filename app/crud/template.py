@@ -1,14 +1,57 @@
-from sqlalchemy import select
+from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
-from app.models import Template
+from app.models import Skill, Template
 
 from . import skill_crud
 from .base import CRUDBase
 
 
 class CRUDTemplate(CRUDBase):
+    async def get_multi(
+        self,
+        session: AsyncSession,
+        q: str = None,
+        direction: int = None,
+        skills: list[int] = None,
+        grade: list[str] = None,
+        type: str = None,
+        duration_from: int = None,
+        duration_to: int = None,
+        creator: int = None,
+    ):
+        filters = []
+        if q is not None:
+            filters.append(Template.title.ilike(f'%{q}%'))
+        if direction is not None:
+            filters.append(Template.direction_id == direction)
+        if skills is not None:
+            filters.append(Template.skills.any(Skill.id.in_(skills)))
+        if grade is not None:
+            filters.append(Template.grade_id.in_(grade))
+        if type is not None:
+            filters.append(Template.type_id == type)
+        if duration_from is not None:
+            filters.append(Template.duration >= duration_from)
+        if duration_to is not None:
+            filters.append(Template.duration <= duration_to)
+        if creator is not None:
+            filters.append(Template.user_id == creator)
+
+        query = select(Template).where(and_(*filters))
+
+        result = await session.execute(
+            query.options(
+                joinedload(Template.type),
+                joinedload(Template.direction),
+                joinedload(Template.grade),
+                joinedload(Template.user),
+                joinedload(Template.skills),
+            )
+        )
+        return result.unique().scalars().all()
+
     async def get(
         self,
         template_id: int,
@@ -21,6 +64,7 @@ class CRUDTemplate(CRUDBase):
                 joinedload(Template.direction),
                 joinedload(Template.grade),
                 joinedload(Template.user),
+                joinedload(Template.skills),
             )
             .where(Template.id == template_id)
         )

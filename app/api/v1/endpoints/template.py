@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db import get_async_session
@@ -10,11 +10,35 @@ from app.schemas import TemplateCreate, TemplateRead, TemplateUpdate
 router = APIRouter()
 
 
+@router.get('/', response_model=list[TemplateRead])
+async def get_templates(
+    q: str | None = None,
+    direction: int | None = None,
+    skills: list[int] = Query(None),
+    grade: list[int] = Query(None),
+    type: int | None = None,
+    duration_from: int | None = None,
+    duration_to: int | None = None,
+    creator: int | None = None,
+    session: AsyncSession = Depends(get_async_session),
+):
+    return await template_crud.get_multi(
+        session=session,
+        q=q,
+        direction=direction,
+        skills=skills,
+        grade=grade,
+        type=type,
+        duration_from=duration_from,
+        duration_to=duration_to,
+        creator=creator,
+    )
+
+
 @router.get('/{template_id}', response_model=TemplateRead)
 async def get_template(
     template_id: int,
     session: AsyncSession = Depends(get_async_session),
-    user: User = Depends(current_user),
 ):
     return await template_crud.get(template_id=template_id, session=session)
 
