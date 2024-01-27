@@ -2,11 +2,7 @@ from datetime import date
 
 from pydantic import BaseModel, Field, PositiveInt
 
-
-from core.constants import LENGTH_LIMITS_STRING_FIELDS
-
 from .task_properties import DirectionRead, SkillRead, TypeRead
-
 
 
 class TaskBase(BaseModel):

@@ -1,8 +1,9 @@
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
+from app.core.constants import LENGTH_LIMITS_STRING_FIELDS
+
 from .base import AbstractDatesModel
-from core.constants import LENGTH_LIMITS_STRING_FIELDS
 
 
 class PDP(AbstractDatesModel):

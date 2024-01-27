@@ -1,14 +1,13 @@
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 
+from app.core.constants import LENTH_LIMITS_SKILL_FIELDS
 from app.core.db import Base
-
-LENGTH_LIMITS_SKILL_NAME_FIELD = 30
 
 
 class Skill(Base):
     value = Column(
-        String(LENGTH_LIMITS_SKILL_NAME_FIELD), nullable=False, unique=True
+        String(LENTH_LIMITS_SKILL_FIELDS), nullable=False, unique=True
     )
 
     tasks = relationship(
