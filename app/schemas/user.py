@@ -1,5 +1,5 @@
 from fastapi_users.schemas import BaseUser, BaseUserCreate
-from pydantic import BaseModel
+from pydantic import BaseModel, PositiveInt
 
 from app.models.user import UserRole
 
@@ -16,7 +16,7 @@ class UserRead(BaseUser[int]):
 
 
 class UserShort(BaseModel):
-    id: int
+    id: PositiveInt
     first_name: str
     last_name: str
     patronymic_name: str | None = None

@@ -1,8 +1,8 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, PositiveInt
 
 
 class TypeRead(BaseModel):
-    id: int
+    id: PositiveInt
     name: str
 
     class Meta:
@@ -10,7 +10,7 @@ class TypeRead(BaseModel):
 
 
 class StatusRead(BaseModel):
-    id: int
+    id: PositiveInt
     name: str
 
     class Meta:
