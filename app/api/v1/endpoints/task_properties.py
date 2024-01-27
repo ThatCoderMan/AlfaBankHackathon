@@ -3,22 +3,24 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db import get_async_session
 from app.core.user import current_user
-from app.crud import skill_crud, status_crud, type_crud
+from app.crud import direction_crud, grade_crud, skill_crud
 from app.models import User
-from app.schemas import SkillRead, StatusRead, TypeRead
+from app.schemas import DirectionRead, SkillRead, TypeRead
 
 router = APIRouter()
 
 
 @router.get(
     '/statuses',
-    response_model=list[StatusRead],
+    response_model=list[DirectionRead],
 )
 async def get_status(
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(current_user),
 ):
-    statuses = await status_crud.get_multi_by_role(session=session, user=user)
+    statuses = await direction_crud.get_multi_by_role(
+        session=session, user=user
+    )
     return statuses
 
 
@@ -29,7 +31,7 @@ async def get_status(
 async def get_type_of_task(
     session: AsyncSession = Depends(get_async_session),
 ):
-    types = await type_crud.get_multi(session=session)
+    types = await grade_crud.get_multi(session=session)
     return types
 
 

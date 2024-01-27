@@ -2,6 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models import Status
+
 from .base import CRUDBase
 
 
@@ -13,4 +14,4 @@ class CRUDStatus(CRUDBase):
         return db_objs.scalars().all()
 
 
-status_crud = CRUDStatus(Status)
+direction_crud = CRUDStatus(Status)

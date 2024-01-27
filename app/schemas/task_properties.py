@@ -9,7 +9,7 @@ class TypeRead(BaseModel):
         orm_mode = True
 
 
-class StatusRead(BaseModel):
+class DirectionRead(BaseModel):
     id: int
     value: str
 

@@ -2,7 +2,7 @@ from datetime import date
 
 from pydantic import BaseModel
 
-from .task_properties import SkillRead, StatusRead, TypeRead
+from .task_properties import DirectionRead, SkillRead, TypeRead
 
 
 class TaskBase(BaseModel):
@@ -14,7 +14,7 @@ class TaskBase(BaseModel):
 class TaskRead(TaskBase):
     id: int
     type: TypeRead
-    status: StatusRead
+    status: DirectionRead
     description: str | None
     skills: list[SkillRead] | None
     link: str | None
@@ -28,7 +28,7 @@ class TaskRead(TaskBase):
 class TaskShort(TaskBase):
     id: int
     type: TypeRead
-    status: StatusRead
+    status: DirectionRead
 
     class Meta:
         orm_mode = True

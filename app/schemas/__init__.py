@@ -1,7 +1,7 @@
 # flake8: ignore
 from .pdp import PDPCreate, PDPRead, PDPUpdate
 from .task import TaskCreate, TaskRead, TaskUpdate
-from .task_properties import SkillRead, StatusRead, TypeRead
+from .task_properties import DirectionRead, SkillRead, TypeRead
 from .template import (
     TemplateCreate,
     TemplateRead,
