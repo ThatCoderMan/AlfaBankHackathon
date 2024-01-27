@@ -3,7 +3,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.permissions import only_chief_accesses
 from app.core.db import get_async_session
-from app.core.user import current_user
 from app.crud import user_crud
 from app.models import User
 from app.schemas import UserShort
@@ -11,7 +10,6 @@ from app.schemas import UserShort
 router = APIRouter()
 
 
-# Todo : Только Руководитель, видит список своих сотрудников
 @router.get(
     '/employees',
     response_model=list[UserShort],
