@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db import get_async_session
 from app.core.user import current_user
-from app.crud import grade_crud, skill_crud, status_crud
+from app.crud import skill_crud, status_crud, type_crud
 from app.models import User
 from app.schemas import DirectionRead, SkillRead, TypeRead
 
@@ -29,7 +29,7 @@ async def get_status(
 async def get_type_of_task(
     session: AsyncSession = Depends(get_async_session),
 ):
-    types = await grade_crud.get_multi(session=session)
+    types = await type_crud.get_multi(session=session)
     return types
 
 

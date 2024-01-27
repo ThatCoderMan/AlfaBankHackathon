@@ -7,4 +7,4 @@ class CRUDType(CRUDBase):
     pass
 
 
-grade_crud = CRUDType(Type)
+type_crud = CRUDType(Type)
