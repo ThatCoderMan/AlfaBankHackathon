@@ -1,5 +1,12 @@
 # flake8: noqa
 from .pdp import PDPCreate, PDPRead, PDPUpdate
 from .task import TaskCreate, TaskRead, TaskUpdate
-from .task_properties import StatusRead, TypeRead
-from .user import UserCreate, UserRead, UserShort, UserUpdate
+from .task_properties import DirectionRead, SkillRead, TypeRead
+from .template import (
+    TemplateCreate,
+    TemplateRead,
+    TemplateShort,
+    TemplateUpdate,
+)
+from .template_properties import DirectionRead, GradeRead
+from .user import UserCreate, UserInfo, UserRead, UserShort, UserUpdate

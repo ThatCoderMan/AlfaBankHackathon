@@ -2,26 +2,27 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
-from app.models import Task
+from app.models import Template
 
+from . import skill_crud
 from .base import CRUDBase
-from .skill import skill_crud
 
 
-class CRUDTask(CRUDBase):
+class CRUDTemplate(CRUDBase):
     async def get(
         self,
-        task_id: int,
+        template_id: int,
         session: AsyncSession,
     ):
         result = await session.execute(
-            select(Task)
+            select(Template)
             .options(
-                joinedload(Task.type),
-                joinedload(Task.status),
-                joinedload(Task.skills),
+                joinedload(Template.type),
+                joinedload(Template.direction),
+                joinedload(Template.grade),
+                joinedload(Template.user),
             )
-            .where(Task.id == task_id)
+            .where(Template.id == template_id)
         )
         return result.scalars().first()
 
@@ -35,19 +36,19 @@ class CRUDTask(CRUDBase):
             session=session, skill_values=obj_in.skills
         )
         await session.refresh(db_obj)
-        db_task = await super().update(
+        db_template = await super().update(
             obj_in=obj_in, db_obj=db_obj, session=session
         )
-        return db_task
+        return db_template
 
     async def create(self, obj_in, session: AsyncSession, **extra_fields):
         obj_in.skills = await skill_crud.get_or_create_many(
             session=session, skill_values=obj_in.skills
         )
-        db_task = await super().create(
+        db_template = await super().create(
             obj_in=obj_in, session=session, **extra_fields
         )
-        return db_task
+        return db_template
 
 
-task_crud = CRUDTask(Task)
+template_crud = CRUDTemplate(Template)

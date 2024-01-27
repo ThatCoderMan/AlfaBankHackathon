@@ -2,7 +2,7 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import aliased, joinedload
 
-from app.models import PDP, Status, Task, User
+from app.models import PDP, Status, Task, Template, User
 from app.models.user import user_user
 
 from .base import CRUDBase
@@ -10,6 +10,12 @@ from .mixin import StatisticMixin
 
 
 class CRUDUser(CRUDBase, StatisticMixin):
+    async def get_templates_creators(self, session: AsyncSession):
+        db_objs = await session.execute(
+            select(self.model).join(Template, Template.user_id == User.id)
+        )
+        return db_objs.scalars().unique()
+
     async def get_employees(
         self,
         user_id: int,
@@ -27,7 +33,7 @@ class CRUDUser(CRUDBase, StatisticMixin):
             .where(user_user.c.chief_id == user_id)
             .join(status_alias, status_alias.id == task_alias.status_id)
             .where(
-                status_alias.name.in_(["исполнено", "выполнено", "отменено"])
+                status_alias.value.in_(["исполнено", "выполнено", "отменено"])
             )
             .label("done")
         )

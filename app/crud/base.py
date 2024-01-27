@@ -18,16 +18,14 @@ class CRUDBase:
         return db_obj.scalars().first()
 
     async def get_multi(self, session: AsyncSession):
-        db_objs = await session.execute(select(self.model))
+        db_objs = await session.execute(
+            select(self.model).order_by(self.model.id)
+        )
         return db_objs.scalars().all()
 
-    async def create(
-        self,
-        obj_in,
-        session: AsyncSession,
-    ):
+    async def create(self, obj_in, session: AsyncSession, **extra_fields):
         obj_in_data = obj_in.dict()
-        db_obj = self.model(**obj_in_data)
+        db_obj = self.model(**obj_in_data, **extra_fields)
         session.add(db_obj)
         await session.commit()
         await session.refresh(db_obj)
@@ -41,7 +39,6 @@ class CRUDBase:
     ):
         obj_data = jsonable_encoder(db_obj)
         update_data = obj_in.dict(exclude_unset=True)
-
         for field in obj_data:
             if field in update_data:
                 setattr(db_obj, field, update_data[field])

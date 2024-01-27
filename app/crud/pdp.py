@@ -43,7 +43,7 @@ class CRUDpdp(CRUDBase, StatisticMixin):
             .where(PDP.user_id == user_id)
             .join(status_alias, status_alias.id == task_alias.status_id)
             .where(
-                status_alias.name.in_(["исполнено", "выполнено", "отменено"])
+                status_alias.value.in_(["исполнено", "выполнено", "отменено"])
             )
             .label("done")
         )
@@ -75,7 +75,7 @@ class CRUDpdp(CRUDBase, StatisticMixin):
             .where(PDP.id == pdp_id)
             .join(status_alias, status_alias.id == task_alias.status_id)
             .where(
-                status_alias.name.in_(["исполнено", "выполнено", "отменено"])
+                status_alias.value.in_(["исполнено", "выполнено", "отменено"])
             )
             .label("done")
         )

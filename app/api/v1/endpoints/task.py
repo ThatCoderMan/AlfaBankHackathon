@@ -43,3 +43,14 @@ async def change_task(
     return await task_crud.update(
         session=session, obj_in=task_in, db_obj=task_db
     )
+
+
+@router.delete('/{task_id}', status_code=204, deprecated=True)
+async def delete_task(
+    task_id: int,
+    session: AsyncSession = Depends(get_async_session),
+    user: User = Depends(current_user),
+):
+    template_obj = await task_crud.get(task_id=task_id, session=session)
+    await task_crud.remove(db_obj=template_obj, session=session)
+    return {'message': 'ok'}

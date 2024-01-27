@@ -7,8 +7,8 @@ from sqlalchemy.dialects.postgresql import ENUM as PgEnum
 from sqlalchemy.orm import relationship
 
 from app.core.constants import (
+    LENGTH_LIMITS_LINK_FIELDS,
     LENGTH_LIMITS_USER_FIELDS,
-    LENGTH_LIMITS_LINK_FIELDS
 )
 from app.core.db import Base
 
@@ -56,3 +56,4 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     photo = Column(String(LENGTH_LIMITS_LINK_FIELDS))
 
     pdp = relationship("PDP", back_populates="user", uselist=False)
+    templates = relationship("Template", back_populates="user")

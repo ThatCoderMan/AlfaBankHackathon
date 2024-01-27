@@ -3,15 +3,23 @@ from pydantic import BaseModel, PositiveInt
 
 class TypeRead(BaseModel):
     id: PositiveInt
-    name: str
+    value: str
 
     class Meta:
         orm_mode = True
 
 
-class StatusRead(BaseModel):
+class DirectionRead(BaseModel):
     id: PositiveInt
-    name: str
+    value: str
+
+    class Meta:
+        orm_mode = True
+
+
+class SkillRead(BaseModel):
+    id: PositiveInt
+    value: str
 
     class Meta:
         orm_mode = True
