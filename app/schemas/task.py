@@ -7,13 +7,13 @@ from .task_properties import StatusRead, TypeRead
 
 
 class TaskBase(BaseModel):
-    pdp_id: PositiveInt
     starting_date: date
     deadline: date
 
 
 class TaskRead(TaskBase):
     id: PositiveInt
+    pdp_id: PositiveInt
     type: TypeRead
     status: StatusRead
     description: str | None
@@ -27,6 +27,7 @@ class TaskRead(TaskBase):
 
 class TaskShort(TaskBase):
     id: PositiveInt
+    pdp_id: PositiveInt
     type: TypeRead
     status: StatusRead
 
@@ -36,6 +37,7 @@ class TaskShort(TaskBase):
 
 class TaskCreate(TaskBase):
     type_id: PositiveInt = 1
+    pdp_id: PositiveInt
     status_id: PositiveInt = 1
     description: str
     skills: str = Field(None, max_length=LENGTH_LIMITS_STRING_FIELDS)
