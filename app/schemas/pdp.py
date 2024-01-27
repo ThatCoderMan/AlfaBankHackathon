@@ -13,7 +13,7 @@ class PDPBase(BaseModel):
 
 class PDPRead(PDPBase):
     id: PositiveInt
-    user_id: int = 1
+    user_id: PositiveInt
     tasks: list[TaskShort]
     done: int
     total: int
@@ -32,7 +32,7 @@ class PDPShort(PDPBase):
 
 
 class PDPCreate(PDPBase):
-    user_id: PositiveInt = 1
+    user_id: PositiveInt
     deadline: date = Field(min_value=date.today())
 
 

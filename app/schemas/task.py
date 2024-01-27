@@ -45,8 +45,8 @@ class TaskCreate(TaskBase):
 
 
 class TaskUpdate(TaskBase):
-    type_id: PositiveInt | None = 1
-    status_id: PositiveInt | None = 1
+    type_id: PositiveInt | None = None
+    status_id: PositiveInt | None = None
     description: str | None = None
     skills: str = Field(None, max_length=LENGTH_LIMITS_STRING_FIELDS)
     chief_comment: str | None = None
