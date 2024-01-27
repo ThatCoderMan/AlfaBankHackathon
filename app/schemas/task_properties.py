@@ -1,8 +1,8 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, PositiveInt
 
 
 class TypeRead(BaseModel):
-    id: int
+    id: PositiveInt
     value: str
 
     class Meta:
@@ -10,7 +10,7 @@ class TypeRead(BaseModel):
 
 
 class DirectionRead(BaseModel):
-    id: int
+    id: PositiveInt
     value: str
 
     class Meta:
@@ -18,7 +18,7 @@ class DirectionRead(BaseModel):
 
 
 class SkillRead(BaseModel):
-    id: int
+    id: PositiveInt
     value: str
 
     class Meta:

@@ -2,10 +2,10 @@ from sqlalchemy import Column, ForeignKey, Integer, String, Table, Text
 from sqlalchemy.orm import relationship
 
 from app.core.db import Base
+from core.constants import LENGTH_LIMITS_STRING_FIELDS
 
 from .base import AbstractDatesModel
 
-LENGTH_LIMITS_STRING_FIELDS = 100
 
 task_skill = Table(
     "task_skill",
