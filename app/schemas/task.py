@@ -7,6 +7,7 @@ from .task_properties import StatusRead, TypeRead
 
 
 class TaskBase(BaseModel):
+    pdp_id: PositiveInt
     starting_date: date
     deadline: date
 
