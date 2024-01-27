@@ -14,4 +14,4 @@ class CRUDStatus(CRUDBase):
         return db_objs.scalars().all()
 
 
-direction_crud = CRUDStatus(Status)
+status_crud = CRUDStatus(Status)

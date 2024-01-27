@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db import get_async_session
 from app.core.user import current_user
-from app.crud import direction_crud, grade_crud, skill_crud
+from app.crud import grade_crud, skill_crud, status_crud
 from app.models import User
 from app.schemas import DirectionRead, SkillRead, TypeRead
 
@@ -18,9 +18,7 @@ async def get_status(
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(current_user),
 ):
-    statuses = await direction_crud.get_multi_by_role(
-        session=session, user=user
-    )
+    statuses = await status_crud.get_multi_by_role(session=session, user=user)
     return statuses
 
 
