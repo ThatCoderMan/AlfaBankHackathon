@@ -23,7 +23,6 @@ async def get_my_pdp(
     return data
 
 
-# Todo : Руководитель и его сторудник
 @router.get(
     '/{pdp_id}',
     response_model=PDPRead,
@@ -34,8 +33,6 @@ async def get_pdp(
 ):
     data = await pdp_crud.get(session=session, pdp_id=pdp_id)
     return data
-
-# Todo : Руководитель и его сторудник
 
 
 @router.patch(
