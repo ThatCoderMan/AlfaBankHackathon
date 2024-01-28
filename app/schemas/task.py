@@ -7,8 +7,8 @@ from .task_properties import DirectionRead, SkillRead, TypeRead
 
 class TaskBase(BaseModel):
     title: str
-    starting_date: date
-    deadline: date
+    starting_date: date | None
+    deadline: date | None
 
 
 class TaskRead(TaskBase):
