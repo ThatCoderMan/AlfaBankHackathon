@@ -21,6 +21,7 @@ class CRUDTemplate(CRUDBase):
                 joinedload(Template.direction),
                 joinedload(Template.grade),
                 joinedload(Template.user),
+                joinedload(Template.skills),
             )
             .where(Template.id == template_id)
         )
@@ -49,6 +50,13 @@ class CRUDTemplate(CRUDBase):
             obj_in=obj_in, session=session, **extra_fields
         )
         return db_template
+
+    async def create_from_dict(self, data: dict, session: AsyncSession):
+        db_obj = self.model(**data)
+        session.add(db_obj)
+        await session.commit()
+        await session.refresh(db_obj)
+        return db_obj
 
 
 template_crud = CRUDTemplate(Template)

@@ -5,7 +5,14 @@ from app.core.db import get_async_session
 from app.core.user import current_user
 from app.crud.template import template_crud
 from app.models import User
-from app.schemas import TemplateCreate, TemplateRead, TemplateUpdate
+from app.schemas import (
+    TaskFromTemplateCreate,
+    TemplateCreate,
+    TemplateFromTaskCreate,
+    TemplateRead,
+    TemplateUpdate,
+)
+from app.services import create_tasks_from_template, create_template_from_task
 
 router = APIRouter()
 
@@ -62,3 +69,26 @@ async def delete_template(
     )
     await template_crud.remove(db_obj=template_obj, session=session)
     return {'message': 'ok'}
+
+
+@router.post('/set_users', status_code=201)
+async def set_template_to_users(
+    data: TaskFromTemplateCreate,
+    session: AsyncSession = Depends(get_async_session),
+):
+    await create_tasks_from_template(
+        session=session,
+        template_id=data.template_id,
+        users_ids=set(data.users_ids),
+    )
+
+
+@router.post('/create_from_task', status_code=201)
+async def create_from_task(
+    data: TemplateFromTaskCreate,
+    session: AsyncSession = Depends(get_async_session),
+    user: User = Depends(current_user),
+):
+    await create_template_from_task(
+        session=session, task_id=data.task_id, user=user
+    )

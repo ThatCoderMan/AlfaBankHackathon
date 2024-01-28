@@ -96,5 +96,13 @@ class CRUDpdp(CRUDBase, StatisticMixin):
         dpd_obj = result.first()
         return self._add_statistic_to_dpd(*dpd_obj)
 
+    async def get_multi_by_users(
+        self, session: AsyncSession, user_ids: set[int]
+    ):
+        db_obj = await session.execute(
+            select(self.model.id).where(self.model.user_id.in_(user_ids))
+        )
+        return db_obj.scalars().all()
+
 
 pdp_crud = CRUDpdp(PDP)

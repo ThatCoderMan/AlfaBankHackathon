@@ -49,5 +49,15 @@ class CRUDTask(CRUDBase):
         )
         return db_task
 
+    async def create_multi_from_dict(
+        self, data: list[dict], session: AsyncSession
+    ):
+        results = []
+        for task_data in data:
+            db_obj = self.model(**task_data)
+            session.add(db_obj)
+            results.append(db_obj)
+        await session.commit()
+
 
 task_crud = CRUDTask(Task)

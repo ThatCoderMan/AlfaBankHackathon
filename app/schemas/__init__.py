@@ -3,7 +3,9 @@ from .pdp import PDPCreate, PDPRead, PDPUpdate
 from .task import TaskCreate, TaskRead, TaskUpdate
 from .task_properties import DirectionRead, SkillRead, TypeRead
 from .template import (
+    TaskFromTemplateCreate,
     TemplateCreate,
+    TemplateFromTaskCreate,
     TemplateRead,
     TemplateShort,
     TemplateUpdate,
