@@ -69,3 +69,24 @@ async def is_task_owner_or_chief(
             detail='Недостаточно прав для доступа к этой задаче'
         )
     return task
+
+
+async def is_task_owner_chief(
+    task_id: int,
+    user: User = Depends(current_user),
+    session: AsyncSession = Depends(get_async_session)
+):
+    if user.id is None:
+        raise HTTPException(
+            status_code=401,
+            detail='Недоступно неавторизованным пользователям'
+        )
+    task = await task_crud.get(session=session, task_id=task_id)
+    pdp = await pdp_crud.get(session=session, pdp_id=task.pdp_id)
+    if task is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f'задача с id {task_id} не существует'
+        )
+    return await user_crud.is_chief(
+        session=session, chief_id=user.id, user_id=pdp.user_id)
