@@ -1,9 +1,5 @@
-from fastapi import HTTPException, status
-from fastapi import HTTPException, status
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy import select
-from sqlalchemy.exc import IntegrityError
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
