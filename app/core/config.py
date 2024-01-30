@@ -5,7 +5,9 @@ class Settings(BaseSettings):
     app_title: str = "AlfaBankHackathon"
     description: str = "AlfaBankHackathon"
     secret: str = "SECRET"
-    database_url: str = "sqlite+aiosqlite:///./fastapi.db"
+    database_url: str = (
+        "postgresql+asyncpg://postgres:postgres@db:5432/postgres"
+    )
 
     class Config:
         env_file = ".env"
