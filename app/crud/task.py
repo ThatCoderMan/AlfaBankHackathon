@@ -38,9 +38,10 @@ class CRUDTask(CRUDBase):
         obj_in,
         session: AsyncSession,
     ):
-        obj_in.skills = await skill_crud.get_or_create_many(
-            session=session, skill_values=obj_in.skills
-        )
+        if obj_in.skills is not None:
+            obj_in.skills = await skill_crud.get_or_create_many(
+                session=session, skill_values=obj_in.skills
+            )
         await session.refresh(db_obj)
         db_task = await super().update(
             obj_in=obj_in, db_obj=db_obj, session=session

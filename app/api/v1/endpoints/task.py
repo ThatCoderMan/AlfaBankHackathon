@@ -1,45 +1,42 @@
-from typing import Optional, Union
-
-from fastapi import APIRouter, Body, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.permissions import is_task_owner_or_chief, is_task_owner_chief
 from app.core.db import get_async_session
 from app.core.user import current_user
 from app.crud.task import task_crud
-from app.models import User
+from app.models import User, UserRole
 from app.schemas import TaskCreate, TaskRead, TaskUpdate
 
 router = APIRouter()
 
 
 task_update_examples = [{
-    "type_id": 1,
-    "status_id": 1,
-    'title': "string",
-    "description": "string",
-    "skills": [{"id": 1, },],
-    "link": "string",
-    "chief_comment": "string",
-    "starting_date": "string",
-    "deadline": "string",
+    'type_id': 1,
+    'status_id': 1,
+    'title': 'string',
+    'description': 'string',
+    'skills': [{'id': 1, },],
+    'link': 'string',
+    'chief_comment': 'string',
+    'starting_date': 'string',
+    'deadline': 'string',
 },
     {
-    "status_id": 1,
-    "employee_comment": "string",
+    'status_id': 1,
+    'employee_comment': 'string',
 
 },
 
 ]
 
-# Todo: permission У текущего пользователя есть доступ к задаче
-#  (шеф или сотрудник) таск_id == user_id and role == chief где его сотрудники
-
 
 @router.get(
     '/{task_id}',
     response_model=TaskRead,
-    dependencies=[Depends(current_user), Depends(is_task_owner_or_chief)]
+    dependencies=[
+        Depends(current_user),
+        Depends(is_task_owner_or_chief)]
 )
 async def get_task(
         task_id: int,
@@ -53,28 +50,50 @@ async def get_task(
 @router.post(
     '/',
     response_model=TaskRead,
-    dependencies=[Depends(current_user), Depends(is_task_owner_or_chief)]
+    dependencies=[Depends(current_user)]
 )
 async def create_task(
         task_in: TaskCreate,
         session: AsyncSession = Depends(get_async_session),
+        user: User = Depends(current_user),
 ):
+    if user.role != UserRole.CHIEF:
+        allowed_fields = (
+            'title',
+            'description',
+            'employee_comment',
+            'starting_date',
+            'deadline',)
+    allowed_fields = (
+        'type_id',
+        'pdp_id',
+        'status_id',
+        'title',
+        'description',
+        'skills',
+        'link',
+        'chief_comment',
+        'starting_date',
+        'deadline',
+    )
+    for field in task_in:
+        if field[0] not in allowed_fields and field[1] is not None:
+            raise HTTPException(
+                status_code=403,
+                detail=f'Недостаточно прав для редактирования поля {
+                    field[0]}'
+            )
     task_obj = await task_crud.create(session=session, obj_in=task_in)
     return await task_crud.get(session=session, task_id=task_obj.id)
-
-
-async def schemes(user: User = Depends(current_user)):
-    if user.role == 'chief':
-        return True
-    return False
-
-# Todo: Проверка полей редактирования в зависимости от роли.
 
 
 @router.patch(
     '/{task_id}',
     response_model=TaskRead,
-    dependencies=[Depends(is_task_owner_or_chief)])
+    dependencies=[
+        Depends(current_user),
+        Depends(is_task_owner_or_chief)
+    ])
 async def change_task(
         task_id: int,
         task_in: TaskUpdate,
@@ -83,10 +102,25 @@ async def change_task(
 ):
     task_db = await task_crud.get(task_id=task_id, session=session)
     if not is_task_owner_chief:
-        allowed_fields = {'employee_comment', 'status_id'}
-        for field in task_in:
-            if field not in allowed_fields:
-                raise HTTPException(status_code=403, detail="Forbidden")
+        allowed_fields = ('employee_comment', 'status_id')
+    allowed_fields = (
+        'type_id',
+        'status_id',
+        'title',
+        'description',
+        'skills',
+        'link',
+        'chief_comment',
+        'starting_date',
+        'deadline',
+    )
+    for field in task_in:
+        if field[0] not in allowed_fields and field[1] is not None:
+            raise HTTPException(
+                status_code=403,
+                detail=f'Недостаточно прав для редактирования поля {
+                    field[0]}'
+            )
     return await task_crud.update(
         session=session, obj_in=task_in, db_obj=task_db
     )
