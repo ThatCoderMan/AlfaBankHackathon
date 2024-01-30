@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.permissions import is_pdp_owner_or_chief
+from app.api.permissions import is_pdp_owner_or_chief, is_pdp_owner_chief
 from app.core.db import get_async_session
 from app.core.user import current_user
 from app.crud import pdp_crud
@@ -26,7 +26,10 @@ async def get_my_pdp(
 @router.get(
     '/{pdp_id}',
     response_model=PDPRead,
-    dependencies=[Depends(current_user), Depends(is_pdp_owner_or_chief)]
+    dependencies=[
+        Depends(current_user),
+        Depends(is_pdp_owner_or_chief)
+    ]
 )
 async def get_pdp(
     pdp_id: int, session: AsyncSession = Depends(get_async_session)
@@ -38,7 +41,7 @@ async def get_pdp(
 @router.patch(
     '/{pdp_id}',
     response_model=PDPRead,
-    dependencies=[Depends(current_user), Depends(is_pdp_owner_or_chief)]
+    dependencies=[Depends(current_user), Depends(is_pdp_owner_chief)]
 )
 async def change_pdp(
     pdp_id: int,
