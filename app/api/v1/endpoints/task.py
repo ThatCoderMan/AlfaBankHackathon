@@ -31,13 +31,15 @@ async def create_task(
 
     await session.refresh(user)
 
+    result = await task_crud.get(session=session, task_id=task_obj.id)
+
     data_email = {
         'user': user,
-        'task': await task_crud.get(session=session, task_id=task_obj.id),
+        'task': result,
         'session': session
     }
     background_tasks.add_task(new_post_task, data_email)
-    return await task_crud.get(session=session, task_id=task_obj.id)
+    return result
 
 
 @router.patch(
