@@ -1,10 +1,9 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, Table, Text
 from sqlalchemy.orm import relationship
 
+from app.core.constants import LENGTH_LIMITS_STRING_FIELDS
 from app.core.db import Base
 
-LENGTH_LIMITS_STRING_FIELDS = 100
-LENGTH_LIMITS_TEXT_FIELDS = 255
 
 template_skill = Table(
     "template_skill",

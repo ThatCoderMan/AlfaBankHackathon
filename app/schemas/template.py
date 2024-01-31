@@ -10,7 +10,7 @@ class TemplateBase(BaseModel):
 
 
 class TemplateRead(TemplateBase):
-    id: int
+    id: PositiveInt
     description: str
     skills: list[SkillRead] | None
     user: UserInfo
@@ -18,7 +18,7 @@ class TemplateRead(TemplateBase):
     grade: GradeRead
     type: TypeRead
     link: str | None
-    duration: int | None
+    duration: PositiveInt | None
     recommendation: str | None
 
     class Meta:
@@ -26,7 +26,7 @@ class TemplateRead(TemplateBase):
 
 
 class TemplateShort(TemplateBase):
-    id: int
+    id: PositiveInt
     user: UserInfo
     direction: DirectionRead
     grade: GradeRead
@@ -43,7 +43,7 @@ class TemplateCreate(TemplateBase):
     grade_id: PositiveInt = 1
     type_id: PositiveInt = 1
     link: str | None
-    duration: int | None
+    duration: PositiveInt | None
     recommendation: str | None
 
 
@@ -55,7 +55,7 @@ class TemplateUpdate(TemplateBase):
     grade_id: PositiveInt | None = None
     type_id: PositiveInt | None = None
     link: str | None = None
-    duration: int | None = None
+    duration: PositiveInt | None = None
     recommendation: str | None = None
 
 
