@@ -67,7 +67,7 @@ TASK_CREATE_EXAMPLES = {
             'link': 'string',
             'chief_comment': 'string',
             'starting_date': datetime.today().date(),
-            'deadline': datetime.today().date()+timedelta(days=10),
+            'deadline': datetime.today().date() + timedelta(days=10),
         }
     },
     'for employee': {
@@ -78,7 +78,7 @@ TASK_CREATE_EXAMPLES = {
             'description': 'string',
             'employee_comment': 'string',
             'starting_date': datetime.today().date(),
-            'deadline': datetime.today().date()+timedelta(days=10),
+            'deadline': datetime.today().date() + timedelta(days=10),
         }
     }}
 TASK_UPDATE_EXAMPLES = {
@@ -94,7 +94,7 @@ TASK_UPDATE_EXAMPLES = {
             'link': 'string',
             'chief_comment': '',
             'starting_date': datetime.today().date(),
-            'deadline': datetime.today().date()+timedelta(days=10),
+            'deadline': datetime.today().date() + timedelta(days=10),
         }
     },
     'for employee': {
