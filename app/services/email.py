@@ -1,10 +1,10 @@
 from fastapi import HTTPException, status
 from fastapi_mail import ConnectionConfig, FastMail, MessageSchema, MessageType
-from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import JSONResponse
 
 from app.core import constants
 from app.core.config import settings
+from app.core.db import AsyncSessionLocal
 from app.crud import user_crud
 from app.models.user import UserRole
 
@@ -42,14 +42,15 @@ async def send_email(email, message_in):
         )
 
 
-async def new_post_task(data, session: AsyncSession):
+async def new_post_task(data):
     user = data.get('user')
     task = data.get('task')
 
     if user.role == UserRole.CHIEF and task.status.value != 'Запланирована':
-        email_employee = await user_crud.get_email_employee(
-            user=user, session=session
-        )
+        async with AsyncSessionLocal() as async_session:
+            email_employee = await user_crud.get_email_employee(
+                user=user, session=async_session
+            )
 
         message = constants.EMPLOYEE_NEW_POST_MESSAGE.format(
             first_name=email_employee.first_name,
@@ -64,9 +65,10 @@ async def new_post_task(data, session: AsyncSession):
         await send_email(email_employee.email, message)
 
     elif user.role == UserRole.EMPLOYEE:
-        email_chief = await user_crud.get_email_chief(
-            user=user, session=session
-        )
+        async with AsyncSessionLocal() as async_session:
+            email_chief = await user_crud.get_email_chief(
+                user=user, session=async_session
+            )
         message = constants.CHEIF_NEW_POST_MESSAGE.format(
             first_name=email_chief.first_name,
             last_name=email_chief.last_name,
@@ -78,7 +80,7 @@ async def new_post_task(data, session: AsyncSession):
         await send_email(email_chief.email, message)
 
 
-async def change_task_email(data, session: AsyncSession):
+async def change_task_email(data):
     user = data.get('user')
     old_status = data.get('old_status')
     task = data.get('task')
@@ -89,9 +91,10 @@ async def change_task_email(data, session: AsyncSession):
     new_chief_comment = task.chief_comment
 
     if user.role == UserRole.CHIEF:
-        email_employee = await user_crud.get_email_employee(
-            user=user, session=session
-        )
+        async with AsyncSessionLocal() as async_session:
+            email_employee = await user_crud.get_email_employee(
+                user=user, session=async_session
+            )
 
         if new_status != old_status and old_chief_comment != new_chief_comment:
             message = (
@@ -134,9 +137,10 @@ async def change_task_email(data, session: AsyncSession):
             await send_email(email_employee.email, message)
 
     if user.role == UserRole.EMPLOYEE:
-        email_chief = await user_crud.get_email_chief(
-            user=user, session=session
-        )
+        async with AsyncSessionLocal() as async_session:
+            email_chief = await user_crud.get_email_chief(
+                user=user, session=async_session
+            )
 
         if (
             new_status != old_status
