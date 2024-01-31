@@ -33,10 +33,6 @@ poetry update
   MAIL_FROM=example@mail.com
   MAIL_PORT=465
   MAIL_SERVER=smtp
-  MAIL_STARTTLS=False
-  MAIL_SSL_TLS=True
-  USE_CREDENTIALS=True
-  VALIDATE_CERTS=False
   ```
 
 
