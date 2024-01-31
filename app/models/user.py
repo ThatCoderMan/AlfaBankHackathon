@@ -37,7 +37,7 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     patronymic_name = Column(String(LENGTH_LIMITS_USER_FIELDS))
     position = Column(String(LENGTH_LIMITS_USER_FIELDS), nullable=False)
     role = Column(
-        PgEnum(UserRole, name='userrole', create_type=False),
+        PgEnum(UserRole, name='userrole', create_type=True),  # Change
         nullable=False,
         default=UserRole.EMPLOYEE,
     )

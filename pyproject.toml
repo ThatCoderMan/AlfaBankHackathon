@@ -22,8 +22,12 @@ fastapi-users = {extras = ["sqlalchemy"], version = "^12.1.2"}
 fastapi-users-db-sqlalchemy = "^6.0.1"
 fastapi-mail = "^1.4.1"
 faker = "^22.5.1"
+httpx = "^0.26.0"
+pytest-asyncio = "^0.23.4"
 
-[tool.poetry.group.dev.dependencies]
+pythonpath = [
+    '.', 'app',
+]
 
 [build-system]
 requires = ["poetry-core"]
@@ -41,3 +45,6 @@ include_trailing_comma = true
 
 [tool.flake8]
 ignore = "N811 W503"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
