@@ -56,5 +56,25 @@ class CRUDUser(CRUDBase, StatisticMixin):
         users = db_obj.all()
         return list(self._add_user_statistic_generator(users))
 
+    async def get_email_chief(self, user, session):
+        db_obj = await session.execute(
+            select(self.model)
+            .join(user_user, user_user.c.chief_id == User.id)
+            .where(user_user.c.user_id == user.id)
+            .options(joinedload(User.pdp))
+        )
+
+        return db_obj.scalar()
+
+    async def get_email_employee(self, user, session):
+        db_obj = await session.execute(
+            select(self.model)
+            .join(user_user, user_user.c.user_id == User.id)
+            .where(user_user.c.chief_id == user.id)
+            .options(joinedload(User.pdp))
+        )
+
+        return db_obj.scalar()
+
 
 user_crud = CRUDUser(User)
