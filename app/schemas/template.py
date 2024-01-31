@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, PositiveInt
 
 from .task_properties import SkillRead, TypeRead
 from .template_properties import DirectionRead, GradeRead
@@ -10,7 +10,7 @@ class TemplateBase(BaseModel):
 
 
 class TemplateRead(TemplateBase):
-    id: int
+    id: PositiveInt
     description: str
     skills: list[SkillRead] | None
     user: UserInfo
@@ -18,7 +18,7 @@ class TemplateRead(TemplateBase):
     grade: GradeRead
     type: TypeRead
     link: str | None
-    duration: int | None
+    duration: PositiveInt | None
     recommendation: str | None
 
     class Meta:
@@ -26,7 +26,7 @@ class TemplateRead(TemplateBase):
 
 
 class TemplateShort(TemplateBase):
-    id: int
+    id: PositiveInt
     user: UserInfo
     direction: DirectionRead
     grade: GradeRead
@@ -39,11 +39,11 @@ class TemplateShort(TemplateBase):
 class TemplateCreate(TemplateBase):
     description: str
     skills: set[str]
-    direction_id: int = 1
-    grade_id: int = 1
-    type_id: int = 1
+    direction_id: PositiveInt = 1
+    grade_id: PositiveInt = 1
+    type_id: PositiveInt = 1
     link: str | None
-    duration: int | None
+    duration: PositiveInt | None
     recommendation: str | None
 
 
@@ -51,9 +51,9 @@ class TemplateUpdate(TemplateBase):
     title: str | None = None
     description: str | None = None
     skills: set[str] | None = None
-    direction_id: int | None = None
-    grade_id: int | None = None
-    type_id: int | None = None
+    direction_id: PositiveInt | None = None
+    grade_id: PositiveInt | None = None
+    type_id: PositiveInt | None = None
     link: str | None = None
-    duration: int | None = None
+    duration: PositiveInt | None = None
     recommendation: str | None = None

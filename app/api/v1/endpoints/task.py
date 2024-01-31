@@ -1,7 +1,17 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Body, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.permissions import is_task_owner_or_chief, is_task_owner_chief
+from app.core.constants import (
+    CHIEF_TASK_CREATE_FIELDS,
+    CHIEF_TASK_UPDATE_FIELDS,
+    EMPLOYEE_TASK_CREATE_FIELDS,
+    EMPLOYEE_TASK_UPDATE_FIELDS,
+    INSUFFICIENT_PERMISSIONS_FOR_FIELD_FILL,
+    INSUFFICIENT_PERMISSIONS_FOR_FIELD_UPDATE,
+    TASK_CREATE_EXAMPLES,
+    TASK_UPDATE_EXAMPLES
+)
 from app.core.db import get_async_session
 from app.core.user import current_user
 from app.crud.task import task_crud
@@ -9,26 +19,6 @@ from app.models import User, UserRole
 from app.schemas import TaskCreate, TaskRead, TaskUpdate
 
 router = APIRouter()
-
-
-task_update_examples = [{
-    'type_id': 1,
-    'status_id': 1,
-    'title': 'string',
-    'description': 'string',
-    'skills': [{'id': 1, },],
-    'link': 'string',
-    'chief_comment': 'string',
-    'starting_date': 'string',
-    'deadline': 'string',
-},
-    {
-    'status_id': 1,
-    'employee_comment': 'string',
-
-},
-
-]
 
 
 @router.get(
@@ -45,43 +35,27 @@ async def get_task(
     return await task_crud.get(task_id=task_id, session=session)
 
 
-# Todo: проверка полей при создании руководителем,
-#  или сотрудником, меняются поля создания задачи
 @router.post(
     '/',
     response_model=TaskRead,
     dependencies=[Depends(current_user)]
 )
 async def create_task(
-        task_in: TaskCreate,
+        task_in: TaskCreate = Body(openapi_examples=TASK_CREATE_EXAMPLES),
         session: AsyncSession = Depends(get_async_session),
         user: User = Depends(current_user),
 ):
     if user.role != UserRole.CHIEF:
-        allowed_fields = (
-            'title',
-            'description',
-            'employee_comment',
-            'starting_date',
-            'deadline',)
-    allowed_fields = (
-        'type_id',
-        'pdp_id',
-        'status_id',
-        'title',
-        'description',
-        'skills',
-        'link',
-        'chief_comment',
-        'starting_date',
-        'deadline',
-    )
+        allowed_fields = EMPLOYEE_TASK_CREATE_FIELDS
+    else:
+        allowed_fields = CHIEF_TASK_CREATE_FIELDS
     for field in task_in:
         if field[0] not in allowed_fields and field[1] is not None:
             raise HTTPException(
                 status_code=403,
-                detail=f'Недостаточно прав для редактирования поля {
-                    field[0]}'
+                detail=INSUFFICIENT_PERMISSIONS_FOR_FIELD_FILL.format(
+                    field=field[0]
+                )
             )
     task_obj = await task_crud.create(session=session, obj_in=task_in)
     return await task_crud.get(session=session, task_id=task_obj.id)
@@ -96,30 +70,22 @@ async def create_task(
     ])
 async def change_task(
         task_id: int,
-        task_in: TaskUpdate,
+        task_in: TaskUpdate = Body(openapi_examples=TASK_UPDATE_EXAMPLES),
         session: AsyncSession = Depends(get_async_session),
         is_task_owner_chief: bool = Depends(is_task_owner_chief),
 ):
     task_db = await task_crud.get(task_id=task_id, session=session)
     if not is_task_owner_chief:
-        allowed_fields = ('employee_comment', 'status_id')
-    allowed_fields = (
-        'type_id',
-        'status_id',
-        'title',
-        'description',
-        'skills',
-        'link',
-        'chief_comment',
-        'starting_date',
-        'deadline',
-    )
+        allowed_fields = EMPLOYEE_TASK_UPDATE_FIELDS
+    else:
+        allowed_fields = CHIEF_TASK_UPDATE_FIELDS
     for field in task_in:
         if field[0] not in allowed_fields and field[1] is not None:
             raise HTTPException(
                 status_code=403,
-                detail=f'Недостаточно прав для редактирования поля {
-                    field[0]}'
+                detail=INSUFFICIENT_PERMISSIONS_FOR_FIELD_UPDATE.format(
+                    field=field[0]
+                )
             )
     return await task_crud.update(
         session=session, obj_in=task_in, db_obj=task_db

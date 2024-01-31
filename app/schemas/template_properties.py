@@ -1,8 +1,8 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, PositiveInt
 
 
 class DirectionRead(BaseModel):
-    id: int
+    id: PositiveInt
     value: str
 
     class Meta:
@@ -10,7 +10,7 @@ class DirectionRead(BaseModel):
 
 
 class GradeRead(BaseModel):
-    id: int
+    id: PositiveInt
     value: str
 
     class Meta:

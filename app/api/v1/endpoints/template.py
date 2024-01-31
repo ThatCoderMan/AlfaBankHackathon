@@ -1,3 +1,5 @@
+from pydantic import PositiveInt
+
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -13,13 +15,13 @@ router = APIRouter()
 @router.get('/', response_model=list[TemplateRead])
 async def get_templates(
     q: str | None = None,
-    direction: int | None = None,
-    skills: list[int] = Query(None),
-    grade: list[int] = Query(None),
-    type: int | None = None,
-    duration_from: int | None = None,
-    duration_to: int | None = None,
-    creator: int | None = None,
+    direction: PositiveInt | None = None,
+    skills: list[PositiveInt] = Query(None),
+    grade: list[PositiveInt] = Query(None),
+    type: PositiveInt | None = None,
+    duration_from: PositiveInt | None = None,
+    duration_to: PositiveInt | None = None,
+    creator: PositiveInt | None = None,
     session: AsyncSession = Depends(get_async_session),
 ):
     return await template_crud.get_multi(
