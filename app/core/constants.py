@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 
 
+"""Константы"""
 LENGTH_LIMITS_STRING_FIELDS = 100
 LENGTH_LIMITS_TEXT_FIELDS = 255
 LENGTH_LIMITS_USER_FIELDS = 150
@@ -8,6 +9,7 @@ LENGTH_LIMITS_LINK_FIELDS = 200
 LENGTH_LIMITS_VALUE_FIELDS = 50
 LENTH_LIMITS_SKILL_FIELDS = 30
 
+"""Исключения"""
 INSUFFICIENT_PERMISSIONS_FOR_ACTION = (
     'У пользователя {email} Недостаточно прав для выполнения действия'
 )
@@ -22,6 +24,8 @@ NO_ACCESS_TASK_MESSAGE = 'Недостаточно прав для доступ�
 NOT_EXIST_PDP_MESSAGE = 'ИПР с id {pdp_id} не существует'
 NOT_EXIST_TASK_MESSAGE = 'задача с id {task_id} не существует'
 UNAUTHORIZED_MESSAGE = 'Недоступно неавторизованным пользователям'
+
+"""Схемы для swagger"""
 CHIEF_TASK_CREATE_FIELDS = (
     'type_id',
     'pdp_id',

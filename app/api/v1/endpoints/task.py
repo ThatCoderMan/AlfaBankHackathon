@@ -38,7 +38,6 @@ async def get_task(
 @router.post(
     '/',
     response_model=TaskRead,
-    dependencies=[Depends(current_user)]
 )
 async def create_task(
         task_in: TaskCreate = Body(openapi_examples=TASK_CREATE_EXAMPLES),

@@ -6,8 +6,7 @@ from app.core.constants import (
     NO_ACCESS_PDP_MESSAGE,
     NO_ACCESS_TASK_MESSAGE,
     NOT_EXIST_PDP_MESSAGE,
-    NOT_EXIST_TASK_MESSAGE,
-    UNAUTHORIZED_MESSAGE
+    NOT_EXIST_TASK_MESSAGE
 )
 from app.core.db import get_async_session
 from app.core.user import current_user
@@ -29,11 +28,6 @@ async def is_pdp_owner_or_chief(
     user: User = Depends(current_user),
     session: AsyncSession = Depends(get_async_session)
 ):
-    if user.id is None:
-        raise HTTPException(
-            status_code=401,
-            detail=UNAUTHORIZED_MESSAGE
-        )
     pdp = await pdp_crud.get(session=session, pdp_id=pdp_id)
     if pdp is None:
         raise HTTPException(
@@ -52,11 +46,6 @@ async def is_pdp_owner_chief(
     user: User = Depends(current_user),
     session: AsyncSession = Depends(get_async_session)
 ):
-    if user.id is None:
-        raise HTTPException(
-            status_code=401,
-            detail=UNAUTHORIZED_MESSAGE
-        )
     pdp = await pdp_crud.get(session=session, pdp_id=pdp_id)
     if pdp is None:
         raise HTTPException(
@@ -75,11 +64,6 @@ async def is_task_owner_or_chief(
     user: User = Depends(current_user),
     session: AsyncSession = Depends(get_async_session)
 ):
-    if user.id is None:
-        raise HTTPException(
-            status_code=401,
-            detail=UNAUTHORIZED_MESSAGE
-        )
     task = await task_crud.get(session=session, task_id=task_id)
     pdp = await pdp_crud.get(session=session, pdp_id=task.pdp_id)
     if task is None:
@@ -102,11 +86,6 @@ async def is_task_owner_chief(
     user: User = Depends(current_user),
     session: AsyncSession = Depends(get_async_session)
 ):
-    if user.id is None:
-        raise HTTPException(
-            status_code=401,
-            detail=UNAUTHORIZED_MESSAGE
-        )
     task = await task_crud.get(session=session, task_id=task_id)
     pdp = await pdp_crud.get(session=session, pdp_id=task.pdp_id)
     if task is None:

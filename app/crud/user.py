@@ -56,8 +56,11 @@ class CRUDUser(CRUDBase, StatisticMixin):
         users = db_obj.all()
         return list(self._add_user_statistic_generator(users))
 
-    @staticmethod
-    async def is_chief(session: AsyncSession, user_id: int, chief_id: int):
+    async def is_chief(
+            self,
+            session: AsyncSession,
+            user_id: int,
+            chief_id: int):
         is_chief = await session.execute(user_user.select().where(
             user_user.c.user_id == user_id,
             user_user.c.chief_id == chief_id
