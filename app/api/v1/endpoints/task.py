@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.email import new_post_task, change_task_email
+from app.services.email import change_task_email, new_post_task
 from app.core.db import get_async_session
 from app.core.user import current_user
 from app.crud.task import task_crud
@@ -36,9 +36,8 @@ async def create_task(
     data_email = {
         'user': user,
         'task': result,
-        'session': session
     }
-    background_tasks.add_task(new_post_task, data_email)
+    background_tasks.add_task(new_post_task, data_email, session)
     return result
 
 
@@ -65,13 +64,12 @@ async def change_task(
 
     data_email = {
         'user': user,
-        'session': session,
         'old_status': old_status,
         'old_chief_comment': old_chief_comment,
         'old_employee_comment': old_employee_comment,
         'task': result
     }
-    background_tasks.add_task(change_task_email, data_email)
+    background_tasks.add_task(change_task_email, data_email, session)
     return result
 
 

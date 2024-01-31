@@ -1,4 +1,5 @@
 from fastapi import HTTPException, status
+from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import JSONResponse
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig, MessageType
 
@@ -20,10 +21,10 @@ conf = ConnectionConfig(
 )
 
 
-async def send_email(email, message_in): # noqa
+async def send_email(email, message_in):
     message = MessageSchema(
         subject="AlfaBankHackathon",
-        recipients=['AlfaBankHackathon@ya.ru'],  # email.get("email")
+        recipients=[email],
         body=message_in,
         subtype=MessageType.html)
 
@@ -37,8 +38,7 @@ async def send_email(email, message_in): # noqa
                             detail=f'Ошибка отправки email : {str(exception)}')
 
 
-async def new_post_task(data):
-    session = data.get('session')
+async def new_post_task(data, session: AsyncSession):
     user = data.get('user')
     task = data.get('task')
 
@@ -77,7 +77,7 @@ async def new_post_task(data):
         await send_email(email_chief.email, message)
 
 
-async def change_task_email(data):
+async def change_task_email(data, session: AsyncSession):
     user = data.get('user')
     old_status = data.get('old_status')
     task = data.get('task')
@@ -86,7 +86,6 @@ async def change_task_email(data):
     old_employee_comment = data.get('old_employee_comment')
     new_employee_comment = task.employee_comment
     new_chief_comment = task.chief_comment
-    session = data.get('session')
 
     if user.role == UserRole.CHIEF:
         email_employee = await user_crud.get_email_employee(
