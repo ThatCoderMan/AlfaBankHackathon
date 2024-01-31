@@ -1,12 +1,12 @@
 from fastapi import HTTPException, status
+from fastapi_mail import ConnectionConfig, FastMail, MessageSchema, MessageType
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import JSONResponse
-from fastapi_mail import FastMail, MessageSchema, ConnectionConfig, MessageType
 
-from app.models.user import UserRole
+from app.core import constants
 from app.core.config import settings
 from app.crud import user_crud
-from app.core import constants
+from app.models.user import UserRole
 
 conf = ConnectionConfig(
     MAIL_USERNAME=settings.mail_username,
@@ -26,16 +26,20 @@ async def send_email(email, message_in):
         subject="AlfaBankHackathon",
         recipients=[email],
         body=message_in,
-        subtype=MessageType.html)
+        subtype=MessageType.html,
+    )
 
     fm = FastMail(conf)
     try:
         await fm.send_message(message)
-        return JSONResponse(status_code=200,
-                            content={'message': 'Email был отправлен'})
+        return JSONResponse(
+            status_code=200, content={'message': 'Email был отправлен'}
+        )
     except Exception as exception:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail=f'Ошибка отправки email : {str(exception)}')
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f'Ошибка отправки email : {str(exception)}',
+        )
 
 
 async def new_post_task(data, session: AsyncSession):
@@ -44,8 +48,7 @@ async def new_post_task(data, session: AsyncSession):
 
     if user.role == UserRole.CHIEF and task.status.value != 'Запланирована':
         email_employee = await user_crud.get_email_employee(
-            user=user,
-            session=session
+            user=user, session=session
         )
 
         message = constants.EMPLOYEE_NEW_POST_MESSAGE.format(
@@ -55,23 +58,21 @@ async def new_post_task(data, session: AsyncSession):
             status_value=task.status.value,
             first_chief=user.first_name,
             last_chief=user.last_name,
-            email_chief=user.email
+            email_chief=user.email,
         )
 
         await send_email(email_employee.email, message)
 
     elif user.role == UserRole.EMPLOYEE:
-
         email_chief = await user_crud.get_email_chief(
-            user=user,
-            session=session
+            user=user, session=session
         )
         message = constants.CHEIF_NEW_POST_MESSAGE.format(
             first_name=email_chief.first_name,
             last_name=email_chief.last_name,
             first_employee=user.first_name,
             last_employee=user.last_name,
-            email_employee=user.email
+            email_employee=user.email,
         )
 
         await send_email(email_chief.email, message)
@@ -89,12 +90,10 @@ async def change_task_email(data, session: AsyncSession):
 
     if user.role == UserRole.CHIEF:
         email_employee = await user_crud.get_email_employee(
-            user=user,
-            session=session
+            user=user, session=session
         )
 
-        if (new_status != old_status
-                and old_chief_comment != new_chief_comment):
+        if new_status != old_status and old_chief_comment != new_chief_comment:
             message = (
                 constants.EMPLOYEE_NEW_PATH_MESSAGE_COMMENT_STATUS.format(
                     first_name=email_employee.first_name,
@@ -104,8 +103,9 @@ async def change_task_email(data, session: AsyncSession):
                     chief_last=user.last_name,
                     old_status=old_status,
                     new_status=new_status,
-                    email_chief=user.email
-                ))
+                    email_chief=user.email,
+                )
+            )
 
             await send_email(email_employee.email, message)
 
@@ -118,7 +118,7 @@ async def change_task_email(data, session: AsyncSession):
                 chief_last=user.last_name,
                 old_status=old_status,
                 new_status=new_status,
-                email_chief=user.email
+                email_chief=user.email,
             )
 
             await send_email(email_employee.email, message)
@@ -128,19 +128,20 @@ async def change_task_email(data, session: AsyncSession):
                 first_name=email_employee.first_name,
                 last_name=email_employee.last_name,
                 task_title=task.title,
-                email_chief=user.email
+                email_chief=user.email,
             )
 
             await send_email(email_employee.email, message)
 
     if user.role == UserRole.EMPLOYEE:
         email_chief = await user_crud.get_email_chief(
-            user=user,
-            session=session
+            user=user, session=session
         )
 
-        if (new_status != old_status
-                and old_employee_comment != new_employee_comment):
+        if (
+            new_status != old_status
+            and old_employee_comment != new_employee_comment
+        ):
             message = constants.CHEIF_NEW_PATH_MESSAGE_COMMENT_STATUS.format(
                 first_name=email_chief.first_name,
                 last_name=email_chief.last_name,
@@ -149,7 +150,7 @@ async def change_task_email(data, session: AsyncSession):
                 last_employee=user.last_name,
                 old_status=old_status,
                 new_status=new_status,
-                email_employee=user.email
+                email_employee=user.email,
             )
 
             await send_email(email_chief.email, message)
@@ -163,7 +164,7 @@ async def change_task_email(data, session: AsyncSession):
                 last_employee=user.last_name,
                 old_status=old_status,
                 new_status=new_status,
-                email_employee=user.email
+                email_employee=user.email,
             )
 
             await send_email(email_chief.email, message)
@@ -175,7 +176,7 @@ async def change_task_email(data, session: AsyncSession):
                 task_title=task.title,
                 first_employee=user.first_name,
                 last_employee=user.last_name,
-                email_employee=user.email
+                email_employee=user.email,
             )
 
             await send_email(email_chief.email, message)
