@@ -20,6 +20,8 @@ passlib = "^1.7.4"
 pydantic = {extras = ["email"], version = "^2.5.3"}
 fastapi-users = {extras = ["sqlalchemy"], version = "^12.1.2"}
 fastapi-users-db-sqlalchemy = "^6.0.1"
+fastapi-mail = "^1.4.1"
+faker = "^22.5.1"
 
 [tool.poetry.group.dev.dependencies]
 
@@ -38,4 +40,4 @@ line_length = 79
 include_trailing_comma = true
 
 [tool.flake8]
-ignore = "N811"
+ignore = "N811 W503"

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, BackgroundTasks, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db import get_async_session
@@ -6,6 +6,7 @@ from app.core.user import current_user
 from app.crud.task import task_crud
 from app.models import User
 from app.schemas import TaskCreate, TaskRead, TaskUpdate
+from app.services.email import change_task_email, new_post_task
 
 router = APIRouter()
 
@@ -21,12 +22,23 @@ async def get_task(
 
 @router.post('/', response_model=TaskRead)
 async def create_task(
+    background_tasks: BackgroundTasks,
     task_in: TaskCreate,
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(current_user),
 ):
     task_obj = await task_crud.create(session=session, obj_in=task_in)
-    return await task_crud.get(session=session, task_id=task_obj.id)
+
+    await session.refresh(user)
+
+    result = await task_crud.get(session=session, task_id=task_obj.id)
+
+    data_email = {
+        'user': user,
+        'task': result,
+    }
+    background_tasks.add_task(new_post_task, data_email)
+    return result
 
 
 @router.patch(
@@ -36,13 +48,29 @@ async def create_task(
 async def change_task(
     task_id: int,
     task_in: TaskUpdate,
+    background_tasks: BackgroundTasks,
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(current_user),
 ):
     task_db = await task_crud.get(task_id=task_id, session=session)
-    return await task_crud.update(
+    old_status = task_db.status.value
+    old_chief_comment = task_db.chief_comment
+    old_employee_comment = task_db.employee_comment
+
+    result = await task_crud.update(
         session=session, obj_in=task_in, db_obj=task_db
     )
+    await session.refresh(user)
+
+    data_email = {
+        'user': user,
+        'old_status': old_status,
+        'old_chief_comment': old_chief_comment,
+        'old_employee_comment': old_employee_comment,
+        'task': result,
+    }
+    background_tasks.add_task(change_task_email, data_email)
+    return result
 
 
 @router.delete('/{task_id}', status_code=204, deprecated=True)
