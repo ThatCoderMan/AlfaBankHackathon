@@ -93,17 +93,19 @@ async def change_task_email(data, session: AsyncSession):
             session=session
         )
 
-        if new_status != old_status and old_chief_comment != new_chief_comment:
-            message = constants.EMPLOYEE_NEW_PATH_MESSAGE_COMMENT_STATUS.format(
-                first_name=email_employee.first_name,
-                last_name=email_employee.last_name,
-                task_title=task.title,
-                chief_first=user.first_name,
-                chief_last=user.last_name,
-                old_status=old_status,
-                new_status=new_status,
-                email_chief=user.email
-            )
+        if (new_status != old_status
+                and old_chief_comment != new_chief_comment):
+            message = (
+                constants.EMPLOYEE_NEW_PATH_MESSAGE_COMMENT_STATUS.format(
+                    first_name=email_employee.first_name,
+                    last_name=email_employee.last_name,
+                    task_title=task.title,
+                    chief_first=user.first_name,
+                    chief_last=user.last_name,
+                    old_status=old_status,
+                    new_status=new_status,
+                    email_chief=user.email
+                ))
 
             await send_email(email_employee.email, message)
 
@@ -137,8 +139,8 @@ async def change_task_email(data, session: AsyncSession):
             session=session
         )
 
-        if (new_status != old_status and
-                old_employee_comment != new_employee_comment):
+        if (new_status != old_status
+                and old_employee_comment != new_employee_comment):
             message = constants.CHEIF_NEW_PATH_MESSAGE_COMMENT_STATUS.format(
                 first_name=email_chief.first_name,
                 last_name=email_chief.last_name,
