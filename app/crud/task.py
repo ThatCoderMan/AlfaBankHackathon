@@ -14,7 +14,7 @@ class CRUDTask(CRUDBase):
         task_id: int,
         session: AsyncSession,
     ):
-        result = await session.execute(
+        db_obj = await session.execute(
             select(Task)
             .options(
                 joinedload(Task.type),
@@ -23,7 +23,9 @@ class CRUDTask(CRUDBase):
             )
             .where(Task.id == task_id)
         )
-        return result.scalars().first()
+        result = db_obj.scalars().first()
+
+        return result
 
     async def update(
         self,
@@ -31,9 +33,10 @@ class CRUDTask(CRUDBase):
         obj_in,
         session: AsyncSession,
     ):
-        obj_in.skills = await skill_crud.get_or_create_many(
-            session=session, skill_values=obj_in.skills
-        )
+        if obj_in.skills is not None:
+            obj_in.skills = await skill_crud.get_or_create_many(
+                session=session, skill_values=obj_in.skills
+            )
         await session.refresh(db_obj)
         db_task = await super().update(
             obj_in=obj_in, db_obj=db_obj, session=session

@@ -7,4 +7,4 @@ from .status import Status
 from .task import Task
 from .template import Template
 from .type import Type
-from .user import User
+from .user import User, UserRole
