@@ -14,3 +14,6 @@ class PDP(AbstractDatesModel):
 
     tasks = relationship("Task", back_populates="pdp")
     user = relationship("User", back_populates="pdp", uselist=False)
+
+    def __str__(self):
+        return self.__tablename__

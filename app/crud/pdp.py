@@ -1,9 +1,9 @@
-from fastapi import HTTPException, status
 from sqlalchemy import Result, Select, alias, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import aliased, joinedload
 from sqlalchemy.sql.elements import BinaryExpression
 
+from app.core.exceptions import CRUDNotFoundException
 from app.models import PDP, Status, Task
 
 from .base import CRUDBase
@@ -63,7 +63,7 @@ class CRUDpdp(CRUDBase, StatisticMixin):
         )
         dpd_obj = result.first()
         if dpd_obj is None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+            raise CRUDNotFoundException(PDP, PDP.id)
 
         return self._add_statistic_to_dpd(*dpd_obj)
 
@@ -99,7 +99,7 @@ class CRUDpdp(CRUDBase, StatisticMixin):
         )
         dpd_obj = result.first()
         if dpd_obj is None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+            raise CRUDNotFoundException(PDP, pdp_id)
 
         return self._add_statistic_to_dpd(*dpd_obj)
 
