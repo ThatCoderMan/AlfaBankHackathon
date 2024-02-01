@@ -9,6 +9,7 @@ from .task import TaskShort
 
 class PDPBase(BaseModel):
     goal: str = Field(max_length=LENGTH_LIMITS_STRING_FIELDS)
+    starting_date: date
     deadline: date
 
 
@@ -34,6 +35,7 @@ class PDPShort(PDPBase):
 
 class PDPCreate(PDPBase):
     user_id: PositiveInt
+    starting_date: date = Field(min_value=date.today())
     deadline: date = Field(min_value=date.today())
 
 
