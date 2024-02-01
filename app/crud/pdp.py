@@ -61,6 +61,8 @@ class CRUDpdp(CRUDBase, StatisticMixin):
             total_subquery=total_subquery,
         )
         dpd_obj = result.first()
+        if dpd_obj is None:
+            return None
         return self._add_statistic_to_dpd(*dpd_obj)
 
     async def get(
@@ -94,6 +96,8 @@ class CRUDpdp(CRUDBase, StatisticMixin):
             total_subquery=total_subquery,
         )
         dpd_obj = result.first()
+        if dpd_obj is None:
+            return None
         return self._add_statistic_to_dpd(*dpd_obj)
 
     async def get_multi_by_users(

@@ -46,7 +46,7 @@ class CRUDSkill(CRUDBase):
         await session.commit()
         skills.extend(
             await self.get_by_values_many(
-                session=session, skill_valuess=new_skills
+                session=session, skill_values=new_skills
             )
         )
         return skills
