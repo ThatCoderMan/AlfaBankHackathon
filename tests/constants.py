@@ -29,3 +29,17 @@ exp_types_task = {'title': str, 'starting_date': datetime,
                   'link': urlparse,
                   'chief_comment': str,
                   'employee_comment': str}
+
+task_data = {
+    'title': "Тест_Title",
+    'starting_date': "2024-02-01",
+    'deadline': "2025-02-01",
+    'type_id': 1,
+    'pdp_id': 1,
+    'status_id': 1,
+    'description': 'Описание Задачи',
+    'skills': ['волшебник'],
+    'link': 'http://task_link',
+    'chief_comment': '',
+    'employee_comment': ''
+}
