@@ -1,32 +1,23 @@
 from datetime import datetime, timedelta
 
-
-"""Константы"""
+# Constants
 LENGTH_LIMITS_STRING_FIELDS = 100
 LENGTH_LIMITS_TEXT_FIELDS = 255
 LENGTH_LIMITS_USER_FIELDS = 150
 LENGTH_LIMITS_LINK_FIELDS = 200
 LENGTH_LIMITS_VALUE_FIELDS = 50
-LENTH_LIMITS_SKILL_FIELDS = 30
+LENGTH_LIMITS_SKILL_FIELDS = 30
 
-"""Исключения"""
-INSUFFICIENT_PERMISSIONS_FOR_ACTION = (
-    'У пользователя {email} Недостаточно прав для выполнения действия'
-)
-INSUFFICIENT_PERMISSIONS_FOR_FIELD_FILL = (
-    'Недостаточно прав для заполнения поля {field}'
-)
-INSUFFICIENT_PERMISSIONS_FOR_FIELD_UPDATE = (
-    'Недостаточно прав для редактирования поля {field}'
-)
-NO_ACCESS_PDP_MESSAGE = 'Доступ к чужим ИПР запрещен'
-NO_ACCESS_TASK_MESSAGE = 'Недостаточно прав для доступа к этой задаче'
-NOT_EXIST_PDP_MESSAGE = 'ИПР с id {pdp_id} не существует'
-NOT_EXIST_TASK_MESSAGE = 'задача с id {task_id} не существует'
-UNAUTHORIZED_MESSAGE = 'Недоступно неавторизованным пользователям'
-NOT_EXIST_EXCEPTION = 'Объект {model} c id {id} не найден'
 
-"""Схемы для swagger"""
+# Exception messages
+NO_ACCESS_ACTION_MESSAGE = 'No access to execute the action.'
+NO_ACCESS_FIELD_MESSAGE = 'No access to field {field}.'
+NO_ACCESS_OBJECT_MESSAGE = 'No access to {name}.'
+NOT_EXIST_ID_MESSAGE = '{name} with id {id} does not exist.'
+NOT_EXIST_MESSAGE = '{name} does not exist.'
+
+
+# Schema access fields
 CHIEF_TASK_CREATE_FIELDS = (
     'type_id',
     'pdp_id',
@@ -55,9 +46,12 @@ EMPLOYEE_TASK_CREATE_FIELDS = (
     'description',
     'employee_comment',
     'starting_date',
-    'deadline'
+    'deadline',
 )
 EMPLOYEE_TASK_UPDATE_FIELDS = ('employee_comment', 'status_id')
+
+
+# Swagger schemas
 TASK_CREATE_EXAMPLES = {
     'for chief': {
         'summary': 'Chief request example',
@@ -68,12 +62,12 @@ TASK_CREATE_EXAMPLES = {
             'status_id': 1,
             'title': 'string',
             'description': 'string',
-            'skills': ['skill_1',],
+            'skills': ['string'],
             'link': 'string',
             'chief_comment': 'string',
             'starting_date': datetime.today().date(),
             'deadline': datetime.today().date() + timedelta(days=10),
-        }
+        },
     },
     'for employee': {
         'summary': 'Employee request example',
@@ -84,8 +78,9 @@ TASK_CREATE_EXAMPLES = {
             'employee_comment': 'string',
             'starting_date': datetime.today().date(),
             'deadline': datetime.today().date() + timedelta(days=10),
-        }
-    }}
+        },
+    },
+}
 TASK_UPDATE_EXAMPLES = {
     'for chief': {
         'summary': 'Chief request example',
@@ -95,12 +90,12 @@ TASK_UPDATE_EXAMPLES = {
             'status_id': 1,
             'title': 'string',
             'description': 'string',
-            'skills': ['skill_1',],
+            'skills': ['string'],
             'link': 'string',
-            'chief_comment': '',
+            'chief_comment': 'string',
             'starting_date': datetime.today().date(),
             'deadline': datetime.today().date() + timedelta(days=10),
-        }
+        },
     },
     'for employee': {
         'summary': 'Employee request example',
@@ -108,5 +103,6 @@ TASK_UPDATE_EXAMPLES = {
         'value': {
             'status_id': 1,
             'employee_comment': 'string',
-        }
-    }}
+        },
+    },
+}

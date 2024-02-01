@@ -3,7 +3,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import aliased, joinedload
 from sqlalchemy.sql.elements import BinaryExpression
 
-from app.core.exceptions import CRUDNotFoundException
 from app.models import PDP, Status, Task
 
 from .base import CRUDBase
@@ -63,8 +62,7 @@ class CRUDpdp(CRUDBase, StatisticMixin):
         )
         dpd_obj = result.first()
         if dpd_obj is None:
-            raise CRUDNotFoundException(PDP, PDP.id)
-
+            return None
         return self._add_statistic_to_dpd(*dpd_obj)
 
     async def get(
@@ -99,8 +97,7 @@ class CRUDpdp(CRUDBase, StatisticMixin):
         )
         dpd_obj = result.first()
         if dpd_obj is None:
-            raise CRUDNotFoundException(PDP, pdp_id)
-
+            return None
         return self._add_statistic_to_dpd(*dpd_obj)
 
     async def get_multi_by_users(

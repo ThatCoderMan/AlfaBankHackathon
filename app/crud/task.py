@@ -1,4 +1,3 @@
-from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
@@ -25,10 +24,6 @@ class CRUDTask(CRUDBase):
             .where(Task.id == task_id)
         )
         result = db_obj.scalars().first()
-
-        if result is None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                                detail=f'Task {task_id} not found')
 
         return result
 

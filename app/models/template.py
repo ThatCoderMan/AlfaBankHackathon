@@ -4,7 +4,6 @@ from sqlalchemy.orm import relationship
 from app.core.constants import LENGTH_LIMITS_STRING_FIELDS
 from app.core.db import Base
 
-
 template_skill = Table(
     "template_skill",
     Base.metadata,
@@ -36,3 +35,7 @@ class Template(Base):
         "Direction", back_populates="templates", uselist=False
     )
     grade = relationship("Grade", back_populates="templates", uselist=False)
+
+    @staticmethod
+    def __str__():
+        return 'Template'
