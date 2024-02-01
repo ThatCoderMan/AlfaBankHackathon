@@ -13,20 +13,13 @@ LENTH_LIMITS_SKILL_FIELDS = 30
 INSUFFICIENT_PERMISSIONS_FOR_ACTION = (
     'У пользователя {email} Недостаточно прав для выполнения действия'
 )
-INSUFFICIENT_PERMISSIONS_FOR_FIELD_FILL = (
-    'Недостаточно прав для заполнения поля {field}'
-)
-INSUFFICIENT_PERMISSIONS_FOR_FIELD_UPDATE = (
+INSUFFICIENT_PERMISSIONS_FOR_FIELD = (
     'Недостаточно прав для редактирования поля {field}'
 )
-NO_ACCESS_PDP_MESSAGE = 'Доступ к чужим ИПР запрещен'
-NO_ACCESS_TASK_MESSAGE = 'Недостаточно прав для доступа к этой задаче'
-NOT_EXIST_PDP_MESSAGE = 'ИПР с id {pdp_id} не существует'
-NOT_EXIST_TASK_MESSAGE = 'задача с id {task_id} не существует'
-UNAUTHORIZED_MESSAGE = 'Недоступно неавторизованным пользователям'
-NOT_EXIST_EXCEPTION = 'Объект {model} c id {id} не найден'
+NOT_EXIST_EXCEPTION_MESSAGE = 'Объект {model} c id {id} не найден'
+NOT_EXIST_BY_USER_ID_EXCEPTION_MESSAGE = 'У пользователя {user_id} нет {model}'
 
-"""Схемы для swagger"""
+"""Наборы полей"""
 CHIEF_TASK_CREATE_FIELDS = (
     'type_id',
     'pdp_id',
@@ -58,6 +51,8 @@ EMPLOYEE_TASK_CREATE_FIELDS = (
     'deadline'
 )
 EMPLOYEE_TASK_UPDATE_FIELDS = ('employee_comment', 'status_id')
+
+"""Схемы для swagger"""
 TASK_CREATE_EXAMPLES = {
     'for chief': {
         'summary': 'Chief request example',

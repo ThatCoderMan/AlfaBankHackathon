@@ -15,6 +15,6 @@ class PDP(AbstractDatesModel):
     tasks = relationship("Task", back_populates="pdp")
     user = relationship("User", back_populates="pdp", uselist=False)
 
-    @classmethod
-    def __str__(cls):
+    @staticmethod
+    def table_name():
         return 'ИПР'

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Body, Depends, HTTPException
+from fastapi import APIRouter, Body, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.permissions import is_task_owner_or_chief, is_task_owner_chief
@@ -7,12 +7,11 @@ from app.core.constants import (
     CHIEF_TASK_UPDATE_FIELDS,
     EMPLOYEE_TASK_CREATE_FIELDS,
     EMPLOYEE_TASK_UPDATE_FIELDS,
-    INSUFFICIENT_PERMISSIONS_FOR_FIELD_FILL,
-    INSUFFICIENT_PERMISSIONS_FOR_FIELD_UPDATE,
     TASK_CREATE_EXAMPLES,
     TASK_UPDATE_EXAMPLES
 )
 from app.core.db import get_async_session
+from app.core.exceptions import EndpointFieldForbiddenException
 from app.core.user import current_user
 from app.crud.task import task_crud
 from app.models import User, UserRole
@@ -50,12 +49,7 @@ async def create_task(
         allowed_fields = CHIEF_TASK_CREATE_FIELDS
     for field in task_in:
         if field[0] not in allowed_fields and field[1] is not None:
-            raise HTTPException(
-                status_code=403,
-                detail=INSUFFICIENT_PERMISSIONS_FOR_FIELD_FILL.format(
-                    field=field[0]
-                )
-            )
+            raise EndpointFieldForbiddenException(field[0])
     task_obj = await task_crud.create(session=session, obj_in=task_in)
     return await task_crud.get(session=session, task_id=task_obj.id)
 
@@ -80,12 +74,7 @@ async def change_task(
         allowed_fields = CHIEF_TASK_UPDATE_FIELDS
     for field in task_in:
         if field[0] not in allowed_fields and field[1] is not None:
-            raise HTTPException(
-                status_code=403,
-                detail=INSUFFICIENT_PERMISSIONS_FOR_FIELD_UPDATE.format(
-                    field=field[0]
-                )
-            )
+            raise EndpointFieldForbiddenException(field[0])
     return await task_crud.update(
         session=session, obj_in=task_in, db_obj=task_db
     )

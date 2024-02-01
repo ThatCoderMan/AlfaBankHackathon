@@ -32,3 +32,7 @@ class Task(AbstractDatesModel):
     pdp = relationship("PDP", back_populates="tasks")
     type = relationship("Type", back_populates="tasks")
     status = relationship("Status", back_populates="tasks")
+
+    @staticmethod
+    def table_name():
+        return 'Задача'
