@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from typing import AsyncGenerator
 
 import pytest
+from fastapi_users.password import PasswordHelper
 from httpx import AsyncClient
 from sqlalchemy import NullPool, insert
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
@@ -11,6 +12,7 @@ from sqlalchemy.orm import sessionmaker
 from app.core.db import Base, get_async_session
 from app.main import app
 from app.models import Direction, Grade, PDP, Skill, Status, Task, Type, User
+from app.models.user import user_user
 from tests import constants
 
 SQLALCHEMY_DATABASE_URL_TEST = 'postgresql+asyncpg://postgres:admin@127.0.0.1:5432/postgres_tests_alfa'  # noqa
@@ -30,7 +32,7 @@ async def override_get_async_session() -> AsyncGenerator[AsyncSession, None]:
         yield session
 
 
-app.dependency_overrides[get_async_session] = override_get_async_session()
+app.dependency_overrides[get_async_session] = override_get_async_session
 
 
 @pytest.fixture(autouse=True, scope='session')
@@ -41,8 +43,8 @@ async def create_db():
 
     yield
 
-    # async with engine_test.begin() as conn:
-    #     await conn.run_sync(Base.metadata.drop_all)
+    async with engine_test.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
 
 
 @pytest.fixture(scope='session')
@@ -69,6 +71,7 @@ async def create_fixture(session_marker, model, data):
                 value=value
             )
             await session.execute(test_data)
+            await session.commit()
 
     return model
 
@@ -105,6 +108,7 @@ async def fixture_status():
                 value=value
             )
             await session.execute(test_data)
+            await session.commit()
 
     return Status
 
@@ -112,6 +116,7 @@ async def fixture_status():
 @pytest.fixture(scope='session')
 async def fixture_users():
     async with async_session_marker() as session:
+        password = PasswordHelper()
         for num, values in enumerate(constants.users_data, start=1):
             email, role, position = values.split(' ')
             test_data = insert(User).values(
@@ -127,33 +132,59 @@ async def fixture_users():
                 position=position,
                 role=role,
                 photo='string',
-                hashed_password='password',
+                hashed_password=password.hash('password'),
             )
             await session.execute(test_data)
+            await session.commit()
 
     return User
 
 
 @pytest.fixture(scope='session')
-async def fixture_pdp():
+async def fixture_pdp(fixture_users):
     async with async_session_marker() as session:
         test_data = insert(PDP).values(
+            id=1,
             user_id=2,
             goal='Finish',
             starting_date=datetime.now(),
             deadline=datetime.now() + timedelta(days=365),
         )
         await session.execute(test_data)
+        await session.commit()
 
     return PDP
 
 
 @pytest.fixture(scope='session')
-async def fixture_task():
+async def fixture_task(fixture_directions, fixture_grade, fixture_pdp,
+                       fixture_skill, fixture_status, fixture_type):
     async with async_session_marker() as session:
         test_data = insert(Task).values(
-            id=1
+            id=10,
+            pdp_id=1,
+            type_id=1,
+            status_id=1,
+            title='Title',
+            description='Description',
+            link='http://link',
+            starting_date=datetime.now(),
+            deadline=datetime.now() + timedelta(days=365),
         )
         await session.execute(test_data)
+        await session.commit()
 
     return Task
+
+
+@pytest.fixture(scope='session')
+async def fixture_user_user(fixture_users):
+    async with get_async_session() as session:
+        test_data = insert(user_user).values(
+            user_id=2,
+            chief_id=1
+        )
+        await session.execute(test_data)
+        await session.commit()
+
+    return user_user
