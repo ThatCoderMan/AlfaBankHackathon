@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Body, Depends
+from fastapi import APIRouter, BackgroundTasks, Body, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.permissions import (
@@ -20,6 +20,7 @@ from app.core.user import current_user
 from app.crud.task import task_crud
 from app.models import Task, User, UserRole
 from app.schemas import TaskCreate, TaskRead, TaskUpdate
+from app.services.email import change_task_email, new_post_task
 
 router = APIRouter()
 
@@ -44,6 +45,7 @@ async def get_task(
     response_model=TaskRead,
 )
 async def create_task(
+    background_tasks: BackgroundTasks,
     task_in: TaskCreate = Body(openapi_examples=TASK_CREATE_EXAMPLES),
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(current_user),
@@ -57,7 +59,17 @@ async def create_task(
         if field not in allowed_fields and value is not None:
             raise exceptions.NoAccessFieldException(field=field)
     task_obj = await task_crud.create(session=session, obj_in=task_in)
-    return await task_crud.get(session=session, task_id=task_obj.id)
+
+    await session.refresh(user)
+
+    result = await task_crud.get(session=session, task_id=task_obj.id)
+
+    data_email = {
+        'user': user,
+        'task': result,
+    }
+    background_tasks.add_task(new_post_task, data_email)
+    return result
 
 
 @router.patch(
@@ -66,10 +78,12 @@ async def create_task(
     dependencies=[Depends(is_task_owner_or_chief)],
 )
 async def change_task(
+    background_tasks: BackgroundTasks,
     task_id: int,
     task_in: TaskUpdate = Body(openapi_examples=TASK_UPDATE_EXAMPLES),
     session: AsyncSession = Depends(get_async_session),
     is_chief: bool = Depends(is_task_owner_chief),
+    user: User = Depends(current_user),
 ):
     task_db = await task_crud.get(task_id=task_id, session=session)
     if task_db is None:
@@ -80,9 +94,23 @@ async def change_task(
     for field, value in task_in:
         if field not in allowed_fields and value is not None:
             raise exceptions.NoAccessFieldException(field=field)
-    return await task_crud.update(
+    old_status = task_db.status.value
+    old_chief_comment = task_db.chief_comment
+    old_employee_comment = task_db.employee_comment
+    result = await task_crud.update(
         session=session, obj_in=task_in, db_obj=task_db
     )
+    await session.refresh(user)
+
+    data_email = {
+        'user': user,
+        'old_status': old_status,
+        'old_chief_comment': old_chief_comment,
+        'old_employee_comment': old_employee_comment,
+        'task': result,
+    }
+    background_tasks.add_task(change_task_email, data_email)
+    return result
 
 
 @router.delete(

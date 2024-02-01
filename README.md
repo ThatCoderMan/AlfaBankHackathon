@@ -27,6 +27,12 @@ poetry update
   DESCRIPTION=AlfaBankHackathon
   SECRET=SECRET
   DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost:5432/postgres
+  
+  MAIL_USERNAME=your_username
+  MAIL_PASSWORD=mail_password
+  MAIL_FROM=example@mail.com
+  MAIL_PORT=465
+  MAIL_SERVER=smtp
   ```
 
 
