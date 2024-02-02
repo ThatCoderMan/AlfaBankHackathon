@@ -43,6 +43,10 @@ jobs:
         script: |
           sudo rm ${{ secrets.PROJECT_NAME }}/.env
           sudo cat > ${{ secrets.PROJECT_NAME }}/.env << _EOF_
+            APP_TITLE=${{ secrets.PROJECT_NAME }}
+            DESCRIPTION=${{ secrets.Description }}
+            SECRET=${{ secrets.SECRET }}
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
             POSTGRES_DB=${{ secrets.POSTGRES_DB }}
             POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}
             POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}
@@ -50,6 +54,15 @@ jobs:
             POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
             PROJECT_NAME=${{ secrets.PROJECT_NAME }}
             DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
+            MAIL_USERNAME=${{ secrets.EMAIL }}
+            MAIL_PASSWORD=${{ secrets.PASSWORD }}
+            MAIL_FROM=${{ secrets.EMAIL }}
+            MAIL_PORT=${{ secrets.EMAIL_PORT }}
+            MAIL_SERVER=${{ secrets.SERVER }}
+            MAIL_STARTTLS=${{ secrets.STARTTLS }}
+            MAIL_SSL_TLS=${{ secrets.SSL_TLS }}
+            USE_CREDENTIALS=${{ secrets.CREDENTIALS }}
+            VALIDATE_CERTS=${{ secrets.VALIDATE_CERTS }}
           _EOF_
     - name: Executing remote ssh commands to deploy
       uses: appleboy/ssh-action@master
@@ -59,7 +72,8 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         script: |
-          cd alfa
+          cd ${{ secrets.PROJECT_NAME }}
           sudo docker stop $(docker ps -qa) && docker rm $(docker ps -qa) && docker rmi -f $(docker images -qa)
+          sudo docker compose -f docker-compose-prod.yaml pull
           sudo docker compose -f docker-compose-prod.yaml down
           sudo docker compose -f docker-compose-prod.yaml up -d

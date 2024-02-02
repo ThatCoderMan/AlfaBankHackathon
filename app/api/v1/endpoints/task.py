@@ -8,6 +8,8 @@ from app.api.permissions import (
 )
 from app.core import exceptions
 from app.core.constants import (
+    APPLICATION_STATUS_ID,
+    AT_WORK_STATUS_ID,
     CHIEF_TASK_CREATE_FIELDS,
     CHIEF_TASK_UPDATE_FIELDS,
     EMPLOYEE_TASK_CREATE_FIELDS,
@@ -17,7 +19,7 @@ from app.core.constants import (
 )
 from app.core.db import get_async_session
 from app.core.user import current_user
-from app.crud.task import task_crud
+from app.crud import pdp_crud, status_crud, task_crud
 from app.models import Task, User, UserRole
 from app.schemas import TaskCreate, TaskRead, TaskUpdate
 from app.services.email import change_task_email, new_post_task
@@ -58,6 +60,12 @@ async def create_task(
     for field, value in task_in:
         if field not in allowed_fields and value is not None:
             raise exceptions.NoAccessFieldException(field=field)
+    task_in.status_id = AT_WORK_STATUS_ID
+    if user.role == UserRole.EMPLOYEE:
+        pdp = await pdp_crud.get_by_user_id(session=session, user_id=user.id)
+        task_in.pdp_id = pdp.id
+        task_in.status_id = APPLICATION_STATUS_ID
+        task_in.skills = ['default']
     task_obj = await task_crud.create(session=session, obj_in=task_in)
 
     await session.refresh(user)
@@ -94,6 +102,21 @@ async def change_task(
     for field, value in task_in:
         if field not in allowed_fields and value is not None:
             raise exceptions.NoAccessFieldException(field=field)
+    statuses = await status_crud.get_multi_by_role(
+        session=session,
+        user=user
+    )
+    if user.role == UserRole.EMPLOYEE:
+        if (task_in.status_id not in statuses
+                or task_in.status_id == APPLICATION_STATUS_ID):
+            raise exceptions.UnacceptableStatusException(
+                status_id=task_in.status_id)
+    else:
+        if (task_in.status_id not in statuses
+                or task_in.status_id == AT_WORK_STATUS_ID):
+            raise exceptions.UnacceptableStatusException(
+                status_id=task_in.status_id)
+
     old_status = task_db.status.value
     old_chief_comment = task_db.chief_comment
     old_employee_comment = task_db.employee_comment

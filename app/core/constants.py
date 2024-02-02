@@ -1,6 +1,9 @@
 from datetime import datetime, timedelta
 
+
 # Constants
+APPLICATION_STATUS_ID = 2
+AT_WORK_STATUS_ID = 3
 LENGTH_LIMITS_STRING_FIELDS = 100
 LENGTH_LIMITS_TEXT_FIELDS = 255
 LENGTH_LIMITS_USER_FIELDS = 150
@@ -14,6 +17,7 @@ NO_ACCESS_FIELD_MESSAGE = 'No access to field {field}.'
 NO_ACCESS_OBJECT_MESSAGE = 'No access to {name}.'
 NOT_EXIST_ID_MESSAGE = '{name} with id {id} does not exist.'
 NOT_EXIST_MESSAGE = '{name} does not exist.'
+UNACCEPTABLE_STATUS_MESSAGE = 'Unacceptable status id {status_id}'
 
 
 # Schema access fields
@@ -42,6 +46,7 @@ CHIEF_TASK_UPDATE_FIELDS = (
 )
 EMPLOYEE_TASK_CREATE_FIELDS = (
     'title',
+    'type_id',
     'description',
     'employee_comment',
     'starting_date',
@@ -73,6 +78,7 @@ TASK_CREATE_EXAMPLES = {
         'description': 'Fields for employee request',
         'value': {
             'title': 'string',
+            'type_id': 1,
             'description': 'string',
             'employee_comment': 'string',
             'starting_date': datetime.today().date(),

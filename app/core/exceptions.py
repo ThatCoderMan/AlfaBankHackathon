@@ -36,3 +36,12 @@ class NoAccessObjectException(HTTPException):
             status_code=403,
             detail=constants.NO_ACCESS_OBJECT_MESSAGE.format(name=str(model)),
         )
+
+
+class UnacceptableStatusException(HTTPException):
+    def __init__(self, status_id):
+        super().__init__(
+            status_code=401,
+            detail=constants.UNACCEPTABLE_STATUS_MESSAGE.format(
+                status_id=status_id),
+        )
