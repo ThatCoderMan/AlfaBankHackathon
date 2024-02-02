@@ -179,7 +179,7 @@ async def fixture_task(fixture_directions, fixture_grade, fixture_pdp,
 
 @pytest.fixture(scope='session')
 async def fixture_user_user(fixture_users):
-    async with get_async_session() as session:
+    async with async_session_marker() as session:
         test_data = insert(user_user).values(
             user_id=2,
             chief_id=1
