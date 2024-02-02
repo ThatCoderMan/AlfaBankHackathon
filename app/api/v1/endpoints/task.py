@@ -17,7 +17,7 @@ from app.core.constants import (
 )
 from app.core.db import get_async_session
 from app.core.user import current_user
-from app.crud.task import task_crud
+from app.crud import pdp_crud, task_crud
 from app.models import Task, User, UserRole
 from app.schemas import TaskCreate, TaskRead, TaskUpdate
 from app.services.email import change_task_email, new_post_task
@@ -58,6 +58,10 @@ async def create_task(
     for field, value in task_in:
         if field not in allowed_fields and value is not None:
             raise exceptions.NoAccessFieldException(field=field)
+    if user.role == UserRole.EMPLOYEE:
+        pdp = await pdp_crud.get_by_user_id(session=session, user_id=user.id)
+        task_in.pdp_id = pdp.id
+        task_in.status_id = 2
     task_obj = await task_crud.create(session=session, obj_in=task_in)
 
     await session.refresh(user)

@@ -38,7 +38,7 @@ class TaskShort(TaskBase):
 
 class TaskCreate(TaskBase):
     type_id: PositiveInt = 1
-    pdp_id: PositiveInt
+    pdp_id: PositiveInt | None = None
     status_id: PositiveInt = 1
     description: str
     skills: list[str] | None = None
