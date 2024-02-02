@@ -46,6 +46,7 @@ CHIEF_TASK_UPDATE_FIELDS = (
 )
 EMPLOYEE_TASK_CREATE_FIELDS = (
     'title',
+    'type_id',
     'description',
     'employee_comment',
     'starting_date',
@@ -77,6 +78,7 @@ TASK_CREATE_EXAMPLES = {
         'description': 'Fields for employee request',
         'value': {
             'title': 'string',
+            'type_id': 1,
             'description': 'string',
             'employee_comment': 'string',
             'starting_date': datetime.today().date(),
