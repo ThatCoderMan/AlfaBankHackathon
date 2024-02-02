@@ -52,9 +52,9 @@ async def is_task_owner_or_chief(
     session: AsyncSession = Depends(get_async_session),
 ):
     task = await task_crud.get(session=session, task_id=task_id)
-    pdp = await pdp_crud.get(session=session, pdp_id=task.pdp_id)
     if task is None:
         raise exceptions.NotExistException(model=Task, pk=task_id)
+    pdp = await pdp_crud.get(session=session, pdp_id=task.pdp_id)
     is_chief = await user_crud.is_chief(
         session=session, chief_id=user.id, user_id=pdp.user_id
     )

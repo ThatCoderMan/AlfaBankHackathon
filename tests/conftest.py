@@ -144,7 +144,6 @@ async def fixture_users():
 async def fixture_pdp(fixture_users):
     async with async_session_marker() as session:
         test_data = insert(PDP).values(
-            id=1,
             user_id=2,
             goal='Finish',
             starting_date=datetime.now(),
@@ -161,7 +160,6 @@ async def fixture_task(fixture_directions, fixture_grade, fixture_pdp,
                        fixture_skill, fixture_status, fixture_type):
     async with async_session_marker() as session:
         test_data = insert(Task).values(
-            id=10,
             pdp_id=1,
             type_id=1,
             status_id=1,

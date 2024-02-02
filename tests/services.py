@@ -31,3 +31,12 @@ async def compare_type(must, expected):
         assert isinstance(must[0][key],
                           expected_type), f"Неверный тип данных для {key}"
     return True
+
+
+async def compare_type_task(must, expected_types):
+    """Проверка на тип данных для словарей."""
+    for key, expected_type in expected_types.items():
+
+        assert isinstance(must[key],
+                          expected_type), f"Неверный тип данных для {key}"
+    return True
