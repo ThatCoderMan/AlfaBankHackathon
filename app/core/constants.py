@@ -17,6 +17,7 @@ NO_ACCESS_FIELD_MESSAGE = 'No access to field {field}.'
 NO_ACCESS_OBJECT_MESSAGE = 'No access to {name}.'
 NOT_EXIST_ID_MESSAGE = '{name} with id {id} does not exist.'
 NOT_EXIST_MESSAGE = '{name} does not exist.'
+UNACCEPTABLE_STATUS_MESSAGE = 'Unacceptable status id {status_id}'
 
 
 # Schema access fields
