@@ -91,6 +91,35 @@ poetry update
   uvicorn app.main:app --reload
   ```
 
+<details><summary><h1>Запуск проекта через докер</h1></summary>
+
+- Клонируйте репозиторий.
+- Перейдите в папку **infra** и создайте в ней файл **.env** с переменными окружения:
+    ```
+  DB_NAME=postgres
+  POSTGRES_USER=postgres
+  DB_HOST=db
+  DB_PORT=5432
+  POSTGRES_PASSWORD=password
+  CORS_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
+  PGADMIN_DEFAULT_EMAIL=user@gmail.ru
+  PGADMIN_DEFAULT_PASSWORD=user_password
+    ``` 
+- Из папки **infra** запустите docker-compose-prod.yaml:
+  ```
+  ~$ docker-compose up -d --build
+  ```
+- В контейнере **backend** выполните миграции:
+  ```
+  ~$ docker-compose exec backend alembic revision --autogenerate -m "Initial migration"
+
+  ~$ docker-compose exec backend alembic upgrade head
+  ```
+
+Документация к API будет доступна по url-адресу [127.0.0.1/redoc](http://127.0.0.1/redoc)
+
+</details>
+
 * **Backend:**
   + [Артемий](https://github.com/ThatCoderMan)
   + [Василий](https://github.com/inferno681)
