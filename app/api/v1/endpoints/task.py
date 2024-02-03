@@ -120,7 +120,7 @@ async def change_task(
     statuses = await status_crud.get_multi_by_role(session=session, user=user)
     if user.role == UserRole.EMPLOYEE:
         if (
-            task_in.status_id not in statuses
+            task_in.status_id not in [status.id for status in statuses]
             or task_in.status_id == APPLICATION_STATUS_ID
         ):
             raise exceptions.UnacceptableStatusException(
@@ -128,7 +128,7 @@ async def change_task(
             )
     else:
         if (
-            task_in.status_id not in statuses
+            task_in.status_id not in [status.id for status in statuses]
             or task_in.status_id == AT_WORK_STATUS_ID
         ):
             raise exceptions.UnacceptableStatusException(
