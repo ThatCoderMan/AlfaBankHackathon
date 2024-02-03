@@ -8,12 +8,12 @@ from app.models import PDP, User
 class StatisticMixin:
     @staticmethod
     def _add_statistic_to_dpd(
-            pdp: PDP | None, done: int, total: int
+        pdp: PDP | None, done: int, total: int
     ) -> PDP | None:
         if pdp is None:
             return None
-        pdp.__setattr__('done', done)
-        pdp.__setattr__('total', total)
+        pdp.__setattr__('done', done if done is not None else 0)
+        pdp.__setattr__('total', total if total is not None else 0)
         return pdp
 
     @staticmethod
