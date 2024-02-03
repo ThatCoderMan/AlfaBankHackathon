@@ -18,6 +18,7 @@ from app.core.constants import (
     TASK_UPDATE_EXAMPLES,
 )
 from app.core.db import get_async_session
+from app.core.exceptions import Error403Schema, ErrorSchema
 from app.core.user import current_user
 from app.crud import pdp_crud, status_crud, task_crud
 from app.models import Task, User, UserRole
@@ -29,8 +30,12 @@ router = APIRouter()
 
 @router.get(
     '/{task_id}',
-    response_model=TaskRead,
     dependencies=[Depends(is_task_owner_or_chief)],
+    responses={
+        200: {'model': TaskRead},
+        401: {'model': ErrorSchema},
+        404: {'model': ErrorSchema},
+    },
 )
 async def get_task(
     task_id: int,
@@ -44,7 +49,12 @@ async def get_task(
 
 @router.post(
     '/',
-    response_model=TaskRead,
+    responses={
+        200: {'model': TaskRead},
+        401: {'model': ErrorSchema},
+        403: {'model': Error403Schema},
+        404: {'model': ErrorSchema},
+    },
 )
 async def create_task(
     background_tasks: BackgroundTasks,
@@ -82,8 +92,13 @@ async def create_task(
 
 @router.patch(
     '/{task_id}',
-    response_model=TaskRead,
     dependencies=[Depends(is_task_owner_or_chief)],
+    responses={
+        200: {'model': TaskRead},
+        401: {'model': ErrorSchema},
+        403: {'model': Error403Schema},
+        404: {'model': ErrorSchema},
+    },
 )
 async def change_task(
     background_tasks: BackgroundTasks,
@@ -102,20 +117,23 @@ async def change_task(
     for field, value in task_in:
         if field not in allowed_fields and value is not None:
             raise exceptions.NoAccessFieldException(field=field)
-    statuses = await status_crud.get_multi_by_role(
-        session=session,
-        user=user
-    )
+    statuses = await status_crud.get_multi_by_role(session=session, user=user)
     if user.role == UserRole.EMPLOYEE:
-        if (task_in.status_id not in statuses
-                or task_in.status_id == APPLICATION_STATUS_ID):
+        if (
+            task_in.status_id not in statuses
+            or task_in.status_id == APPLICATION_STATUS_ID
+        ):
             raise exceptions.UnacceptableStatusException(
-                status_id=task_in.status_id)
+                status_id=task_in.status_id
+            )
     else:
-        if (task_in.status_id not in statuses
-                or task_in.status_id == AT_WORK_STATUS_ID):
+        if (
+            task_in.status_id not in statuses
+            or task_in.status_id == AT_WORK_STATUS_ID
+        ):
             raise exceptions.UnacceptableStatusException(
-                status_id=task_in.status_id)
+                status_id=task_in.status_id
+            )
 
     old_status = task_db.status.value
     old_chief_comment = task_db.chief_comment
@@ -144,6 +162,12 @@ async def change_task(
         Depends(only_chief_accesses),
         Depends(is_task_owner_or_chief),
     ],
+    responses={
+        204: {'model': None},
+        401: {'model': ErrorSchema},
+        403: {'model': Error403Schema},
+        404: {'model': ErrorSchema},
+    },
 )
 async def delete_task(
     task_id: int,
