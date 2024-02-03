@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.api.permissions import is_pdp_owner_chief, is_pdp_owner_or_chief
 from app.core import exceptions
 from app.core.db import get_async_session
+from app.core.exceptions import Error403Schema, ErrorSchema
 from app.core.user import current_user
 from app.crud import pdp_crud
 from app.models import PDP, User
@@ -14,7 +15,11 @@ router = APIRouter()
 
 @router.get(
     '/my',
-    response_model=PDPRead,
+    responses={
+        200: {'model': PDPRead},
+        401: {'model': ErrorSchema},
+        404: {'model': ErrorSchema},
+    },
 )
 async def get_my_pdp(
     session: AsyncSession = Depends(get_async_session),
@@ -28,8 +33,12 @@ async def get_my_pdp(
 
 @router.get(
     '/{pdp_id}',
-    response_model=PDPRead,
     dependencies=[Depends(current_user), Depends(is_pdp_owner_or_chief)],
+    responses={
+        200: {'model': PDPRead},
+        401: {'model': ErrorSchema},
+        404: {'model': ErrorSchema},
+    },
 )
 async def get_pdp(
     pdp_id: int, session: AsyncSession = Depends(get_async_session)
@@ -42,8 +51,13 @@ async def get_pdp(
 
 @router.patch(
     '/{pdp_id}',
-    response_model=PDPRead,
     dependencies=[Depends(is_pdp_owner_chief)],
+    responses={
+        200: {'model': PDPRead},
+        401: {'model': ErrorSchema},
+        403: {'model': Error403Schema},
+        404: {'model': ErrorSchema},
+    },
 )
 async def change_pdp(
     pdp_id: int,

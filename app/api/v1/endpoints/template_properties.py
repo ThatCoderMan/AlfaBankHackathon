@@ -10,7 +10,9 @@ router = APIRouter()
 
 @router.get(
     '/direction',
-    response_model=list[DirectionRead],
+    responses={
+        200: {'model': list[DirectionRead]},
+    },
 )
 async def get_directions(
     session: AsyncSession = Depends(get_async_session),
@@ -21,7 +23,9 @@ async def get_directions(
 
 @router.get(
     '/grade',
-    response_model=list[GradeRead],
+    responses={
+        200: {'model': list[GradeRead]},
+    },
 )
 async def get_grades(
     session: AsyncSession = Depends(get_async_session),
@@ -30,7 +34,12 @@ async def get_grades(
     return grades
 
 
-@router.get('/creators', response_model=list[UserInfo])
+@router.get(
+    '/creators',
+    responses={
+        200: {'model': list[UserInfo]},
+    },
+)
 async def get_creators(session: AsyncSession = Depends(get_async_session)):
     users = await user_crud.get_templates_creators(session=session)
     return users

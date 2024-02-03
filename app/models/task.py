@@ -33,6 +33,6 @@ class Task(AbstractDatesModel):
     type = relationship("Type", back_populates="tasks")
     status = relationship("Status", back_populates="tasks")
 
-    @staticmethod
-    def __str__():
+    @classmethod
+    def __str__(cls):
         return 'Task'

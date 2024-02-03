@@ -1,14 +1,14 @@
-from pydantic import PositiveInt
-
 from fastapi import APIRouter, Depends, Query
+from pydantic import PositiveInt
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.permissions import only_chief_accesses
 from app.core import exceptions
 from app.core.db import get_async_session
+from app.core.exceptions import Error403Schema, ErrorSchema
 from app.core.user import current_user
 from app.crud.template import template_crud
-from app.models import User, Template
+from app.models import Template, User
 from app.schemas import (
     TaskFromTemplateCreate,
     TemplateCreate,
@@ -21,17 +21,22 @@ from app.services import create_tasks_from_template, create_template_from_task
 router = APIRouter()
 
 
-@router.get('/', response_model=list[TemplateRead])
+@router.get(
+    '/',
+    responses={
+        200: {'model': list[TemplateRead]},
+    },
+)
 async def get_templates(
-        q: str | None = None,
-        direction: PositiveInt | None = None,
-        skills: list[PositiveInt] = Query(None),
-        grade: list[PositiveInt] = Query(None),
-        type: PositiveInt | None = None,
-        duration_from: PositiveInt | None = None,
-        duration_to: PositiveInt | None = None,
-        creator: PositiveInt | None = None,
-        session: AsyncSession = Depends(get_async_session),
+    q: str | None = None,
+    direction: PositiveInt | None = None,
+    skills: list[PositiveInt] = Query(None),
+    grade: list[PositiveInt] = Query(None),
+    type: PositiveInt | None = None,
+    duration_from: PositiveInt | None = None,
+    duration_to: PositiveInt | None = None,
+    creator: PositiveInt | None = None,
+    session: AsyncSession = Depends(get_async_session),
 ):
     return await template_crud.get_multi(
         session=session,
@@ -46,14 +51,19 @@ async def get_templates(
     )
 
 
-@router.get('/{template_id}', response_model=TemplateRead)
+@router.get(
+    '/{template_id}',
+    responses={
+        200: {'model': TemplateRead},
+        404: {'model': ErrorSchema},
+    },
+)
 async def get_template(
-        template_id: int,
-        session: AsyncSession = Depends(get_async_session),
+    template_id: int,
+    session: AsyncSession = Depends(get_async_session),
 ):
     template_obj = await template_crud.get(
-        template_id=template_id,
-        session=session
+        template_id=template_id, session=session
     )
     if template_obj is None:
         raise exceptions.NotExistException(model=Template, pk=template_id)
@@ -63,12 +73,17 @@ async def get_template(
 @router.post(
     '/',
     response_model=TemplateRead,
-    dependencies=[Depends(only_chief_accesses)]
+    dependencies=[Depends(only_chief_accesses)],
+    responses={
+        200: {'model': TemplateRead},
+        401: {'model': ErrorSchema},
+        403: {'model': Error403Schema},
+    },
 )
 async def create_template(
-        template_in: TemplateCreate,
-        session: AsyncSession = Depends(get_async_session),
-        user: User = Depends(current_user),
+    template_in: TemplateCreate,
+    session: AsyncSession = Depends(get_async_session),
+    user: User = Depends(current_user),
 ):
     template_obj = await template_crud.create(
         session=session, obj_in=template_in, user_id=user.id
@@ -80,13 +95,18 @@ async def create_template(
 
 @router.patch(
     '/{template_id}',
-    response_model=TemplateRead,
-    dependencies=[Depends(only_chief_accesses)]
+    dependencies=[Depends(only_chief_accesses)],
+    responses={
+        200: {'model': TemplateRead},
+        401: {'model': ErrorSchema},
+        403: {'model': Error403Schema},
+        404: {'model': ErrorSchema},
+    },
 )
 async def change_template(
-        template_id: int,
-        template_in: TemplateUpdate,
-        session: AsyncSession = Depends(get_async_session),
+    template_id: int,
+    template_in: TemplateUpdate,
+    session: AsyncSession = Depends(get_async_session),
 ):
     template_db = await template_crud.get(
         template_id=template_id, session=session
@@ -102,11 +122,17 @@ async def change_template(
     '/{template_id}',
     status_code=204,
     deprecated=True,
-    dependencies=[Depends(only_chief_accesses)]
+    dependencies=[Depends(only_chief_accesses)],
+    responses={
+        204: {'model': None},
+        401: {'model': ErrorSchema},
+        403: {'model': Error403Schema},
+        404: {'model': ErrorSchema},
+    },
 )
 async def delete_template(
-        template_id: int,
-        session: AsyncSession = Depends(get_async_session),
+    template_id: int,
+    session: AsyncSession = Depends(get_async_session),
 ):
     template_obj = await template_crud.get(
         template_id=template_id, session=session
@@ -120,11 +146,17 @@ async def delete_template(
 @router.post(
     '/set_users',
     status_code=201,
-    dependencies=[Depends(only_chief_accesses)]
+    dependencies=[Depends(only_chief_accesses)],
+    responses={
+        201: {'model': None},
+        401: {'model': ErrorSchema},
+        403: {'model': Error403Schema},
+        404: {'model': ErrorSchema},
+    },
 )
 async def set_template_to_users(
-        data: TaskFromTemplateCreate,
-        session: AsyncSession = Depends(get_async_session),
+    data: TaskFromTemplateCreate,
+    session: AsyncSession = Depends(get_async_session),
 ):
     await create_tasks_from_template(
         session=session,
@@ -136,12 +168,18 @@ async def set_template_to_users(
 @router.post(
     '/create_from_task',
     status_code=201,
-    dependencies=[Depends(only_chief_accesses)]
+    dependencies=[Depends(only_chief_accesses)],
+    responses={
+        201: {'model': None},
+        401: {'model': ErrorSchema},
+        403: {'model': Error403Schema},
+        404: {'model': ErrorSchema},
+    },
 )
 async def create_from_task(
-        data: TemplateFromTaskCreate,
-        session: AsyncSession = Depends(get_async_session),
-        user: User = Depends(current_user),
+    data: TemplateFromTaskCreate,
+    session: AsyncSession = Depends(get_async_session),
+    user: User = Depends(current_user),
 ):
     await create_template_from_task(
         session=session, task_id=data.task_id, user=user
