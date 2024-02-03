@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Query
 from pydantic import PositiveInt
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.permissions import only_chief_accesses
+from app.api.permissions import is_template_owner, only_chief_accesses
 from app.core import exceptions
 from app.core.db import get_async_session
 from app.core.exceptions import Error403Schema, ErrorSchema
@@ -95,7 +95,7 @@ async def create_template(
 
 @router.patch(
     '/{template_id}',
-    dependencies=[Depends(only_chief_accesses)],
+    dependencies=[Depends(is_template_owner)],
     responses={
         200: {'model': TemplateRead},
         401: {'model': ErrorSchema},
@@ -122,7 +122,7 @@ async def change_template(
     '/{template_id}',
     status_code=204,
     deprecated=True,
-    dependencies=[Depends(only_chief_accesses)],
+    dependencies=[Depends(is_template_owner)],
     responses={
         204: {'model': None},
         401: {'model': ErrorSchema},
@@ -146,7 +146,6 @@ async def delete_template(
 @router.post(
     '/set_users',
     status_code=201,
-    dependencies=[Depends(only_chief_accesses)],
     responses={
         201: {'model': None},
         401: {'model': ErrorSchema},
@@ -157,7 +156,11 @@ async def delete_template(
 async def set_template_to_users(
     data: TaskFromTemplateCreate,
     session: AsyncSession = Depends(get_async_session),
+    user: User = Depends(current_user),
 ):
+    await is_template_owner(
+        session=session, user=user, template_id=data.template_id
+    )
     await create_tasks_from_template(
         session=session,
         template_id=data.template_id,
@@ -168,7 +171,6 @@ async def set_template_to_users(
 @router.post(
     '/create_from_task',
     status_code=201,
-    dependencies=[Depends(only_chief_accesses)],
     responses={
         201: {'model': None},
         401: {'model': ErrorSchema},

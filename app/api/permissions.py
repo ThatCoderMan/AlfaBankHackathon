@@ -4,8 +4,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core import exceptions
 from app.core.db import get_async_session
 from app.core.user import current_user
-from app.crud import pdp_crud, task_crud, user_crud
-from app.models import PDP, Task, User, UserRole
+from app.crud import pdp_crud, task_crud, template_crud, user_crud
+from app.models import PDP, Task, Template, User, UserRole
 
 
 def only_chief_accesses(user: User = Depends(current_user)):
@@ -75,3 +75,16 @@ async def is_task_owner_chief(
     return await user_crud.is_chief(
         session=session, chief_id=user.id, user_id=pdp.user_id
     )
+
+
+async def is_template_owner(
+    template_id: int,
+    user: User = Depends(current_user),
+    session: AsyncSession = Depends(get_async_session),
+):
+    template = await template_crud.get(
+        session=session, template_id=template_id
+    )
+    if template is None:
+        raise exceptions.NotExistException(model=Template, pk=template_id)
+    return template.user_id == user.id
