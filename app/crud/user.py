@@ -32,9 +32,7 @@ class CRUDUser(CRUDBase, StatisticMixin):
             .join(user_user, user_user.c.user_id == User.id)
             .where(user_user.c.chief_id == user_id)
             .join(status_alias, status_alias.id == task_alias.status_id)
-            .where(
-                status_alias.value.in_(["исполнено", "выполнено", "отменено"])
-            )
+            .where(status_alias.value.in_(["Исполнено", "Выполнено"]))
             .label("done")
         )
         total_subquery = (
