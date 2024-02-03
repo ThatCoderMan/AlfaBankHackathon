@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db import get_async_session
+from app.core.exceptions import ErrorSchema
 from app.core.user import current_user
 from app.crud import skill_crud, status_crud, type_crud
 from app.models import User
@@ -12,7 +13,10 @@ router = APIRouter()
 
 @router.get(
     '/statuses',
-    response_model=list[DirectionRead],
+    responses={
+        200: {'model': list[DirectionRead]},
+        401: {'model': ErrorSchema},
+    },
 )
 async def get_status(
     session: AsyncSession = Depends(get_async_session),
@@ -22,10 +26,7 @@ async def get_status(
     return statuses
 
 
-@router.get(
-    '/types',
-    response_model=list[TypeRead],
-)
+@router.get('/types', responses={200: {'model': list[TypeRead]}})
 async def get_type_of_task(
     session: AsyncSession = Depends(get_async_session),
 ):
@@ -36,6 +37,9 @@ async def get_type_of_task(
 @router.get(
     '/skills/',
     response_model=list[SkillRead],
+    responses={
+        200: {'model': list[SkillRead]},
+    },
 )
 async def get_skills(
     q: str = "",

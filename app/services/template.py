@@ -1,8 +1,9 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core import exceptions
+from app.core.constants import NOT_STATED_ID, PLANED_STATUS_ID
 from app.crud import pdp_crud, task_crud, template_crud
-from app.models import Task, Template, User, PDP
+from app.models import PDP, Task, Template, User
 
 
 async def create_tasks_from_template(
@@ -21,7 +22,7 @@ async def create_tasks_from_template(
         for field, value in template_obj.__dict__.items()
         if hasattr(Task, field) and field not in ['id', 'type']
     }
-    task_dict['status_id'] = 6
+    task_dict['status_id'] = PLANED_STATUS_ID
     tasks_data = []
     for pdp in pdps:
         task_data = {'pdp_id': pdp}
@@ -42,8 +43,8 @@ async def create_template_from_task(
         for field, value in task_obj.__dict__.items()
         if hasattr(Template, field) and field not in ['id', 'type']
     }
-    template_data['grade_id'] = 1
-    template_data['direction_id'] = 1
+    template_data['grade_id'] = NOT_STATED_ID
+    template_data['direction_id'] = NOT_STATED_ID
     template_data['user_id'] = user.id
     await template_crud.create_from_dict(session=session, data=template_data)
     return True

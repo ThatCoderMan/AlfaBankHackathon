@@ -36,6 +36,6 @@ class Template(Base):
     )
     grade = relationship("Grade", back_populates="templates", uselist=False)
 
-    @staticmethod
-    def __str__():
+    @classmethod
+    def __str__(cls):
         return 'Template'
