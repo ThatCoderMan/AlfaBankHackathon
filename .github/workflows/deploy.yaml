@@ -42,8 +42,6 @@ jobs:
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         source: "infra/docker-compose-prod.yaml"
         target: ${{ secrets.PROJECT_NAME }}
-        script: |
-          mv ${{ secrets.PROJECT_NAME }}/infra/docker-compose-prod.yaml ${{ secrets.PROJECT_NAME }}/
     - name: Executing remote ssh commands to deploy
       uses: appleboy/ssh-action@master
       with:
@@ -53,6 +51,7 @@ jobs:
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         script: |
           cd ${{ secrets.PROJECT_NAME }}
+          mv ./infra/docker-compose-prod.yaml .
           sudo docker compose -f docker-compose-prod.yaml pull
           sudo docker compose -f docker-compose-prod.yaml down
           sudo docker compose -f docker-compose-prod.yaml up -d
