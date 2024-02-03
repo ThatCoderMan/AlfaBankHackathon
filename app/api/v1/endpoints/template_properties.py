@@ -36,9 +36,7 @@ async def get_grades(
 
 @router.get(
     '/creators',
-    responses={
-        200: {'model': list[UserInfo]},
-    },
+    response_model=list[UserInfo],
 )
 async def get_creators(session: AsyncSession = Depends(get_async_session)):
     users = await user_crud.get_templates_creators(session=session)
