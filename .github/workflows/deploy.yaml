@@ -1,4 +1,4 @@
-name: Alfa workflows
+name: Deploy
 
 on:
   push:
@@ -33,37 +33,6 @@ jobs:
     steps:
     - name: Checkout repo
       uses: actions/checkout@v3
-    - name: Create project directory and .env-file
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.SSH_KEY }}
-        passphrase: ${{ secrets.PASSPHRASE }}
-        script: |
-          sudo rm ${{ secrets.PROJECT_NAME }}/.env
-          sudo cat > ${{ secrets.PROJECT_NAME }}/.env << _EOF_
-            APP_TITLE=${{ secrets.PROJECT_NAME }}
-            DESCRIPTION=${{ secrets.Description }}
-            SECRET=${{ secrets.SECRET }}
-            DATABASE_URL=${{ secrets.DATABASE_URL }}
-            POSTGRES_DB=${{ secrets.POSTGRES_DB }}
-            POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}
-            POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}
-            POSTGRES_USER=${{ secrets.POSTGRES_USER }}
-            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-            PROJECT_NAME=${{ secrets.PROJECT_NAME }}
-            DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
-            MAIL_USERNAME=${{ secrets.EMAIL }}
-            MAIL_PASSWORD=${{ secrets.PASSWORD }}
-            MAIL_FROM=${{ secrets.EMAIL }}
-            MAIL_PORT=${{ secrets.EMAIL_PORT }}
-            MAIL_SERVER=${{ secrets.SERVER }}
-            MAIL_STARTTLS=${{ secrets.STARTTLS }}
-            MAIL_SSL_TLS=${{ secrets.SSL_TLS }}
-            USE_CREDENTIALS=${{ secrets.CREDENTIALS }}
-            VALIDATE_CERTS=${{ secrets.VALIDATE_CERTS }}
-          _EOF_
     - name: Executing remote ssh commands to deploy
       uses: appleboy/ssh-action@master
       with:
