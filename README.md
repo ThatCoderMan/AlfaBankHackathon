@@ -13,6 +13,10 @@
   <img src="https://img.shields.io/badge/Docker-555555?style=for-the-badge&logo=docker&logoColor=2496ED">
 </div>
 
+<br>
+<br>
+<br>
+
 Документация к API будет доступна по url-адресу [AlfaBankHackathon/SWAGER](http://alfabankhack.ddns.net:8000/docs)
 
 Ссылка на zip-архив с некоторыми скриншотами [zip](https://drive.google.com/file/d/1bScOyVM6yZnohbRz4_n6zsYUs8QWWmuV/view?usp=drive_link)
