@@ -1,7 +1,7 @@
 from httpx import AsyncClient
 
 from tests.conftest import async_client
-from tests.constants import exp_types_task, task_data
+from tests.constants import exp_types_task, task_data, task_data_employee
 from tests.services import authorize_user, compare_type_task
 
 
@@ -64,8 +64,18 @@ async def test_chief_post_get_task(async_client: AsyncClient,
                                           'Authorization': f'Bearer {token}'})
     assert response.status_code == 403
 
-    response = await async_client.get(f'/api/v1/task/{4}',
+    response = await async_client.get(f'/api/v1/task/{5}',
                                       headers={
                                           'Authorization': f'Bearer {token}'})
-    print(response)
-    assert response.status_code == 200
+    assert response.status_code == 404
+
+
+async def test_employee_post_get_task(async_client: AsyncClient):
+    token = await authorize_user(async_client, 'employee@email.com', 'password')
+
+    response = await async_client.post('/api/v1/task/',
+                                       headers={
+                                           'Authorization': f'Bearer {token}'},
+                                       json=task_data)
+    assert response.status_code == 403
+

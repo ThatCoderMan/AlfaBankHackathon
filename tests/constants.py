@@ -44,3 +44,13 @@ task_data = {
     'chief_comment': '',
     'employee_comment': ''
 }
+
+task_data_employee = {
+    'title': "Тест_Title_Employee",
+    'starting_date': "2024-02-01",
+    'deadline': "2025-02-01",
+    'type_id': 2,
+    'pdp_id': 1,
+    'description': 'Описание Задачи_Employee',
+    'employee_comment': ''
+}

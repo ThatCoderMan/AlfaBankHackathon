@@ -5,7 +5,7 @@ from typing import AsyncGenerator
 import pytest
 from fastapi_users.password import PasswordHelper
 from httpx import AsyncClient
-from sqlalchemy import NullPool, insert
+from sqlalchemy import NullPool, insert, text
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
