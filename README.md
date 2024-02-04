@@ -2,6 +2,8 @@
   <img src="https://upload.wikimedia.org/wikipedia/commons/7/77/Alfa-Bank.svg" alt="AlfaBankHackathon">
 </p>
 
+<br>
+
 <div id="header" align="center">
   <img src="https://img.shields.io/badge/Python-3.11.1-F8F8FF?style=for-the-badge&logo=python&logoColor=20B2AA">
   <img src="https://img.shields.io/badge/FastAPI-0.109.1-F8F8FF?style=for-the-badge&logo=FastAPI&logoColor=20B2AA">
@@ -13,8 +15,6 @@
   <img src="https://img.shields.io/badge/Docker-555555?style=for-the-badge&logo=docker&logoColor=2496ED">
 </div>
 
-<br>
-<br>
 <br>
 
 Документация к API будет доступна по url-адресу [AlfaBankHackathon/SWAGER](http://alfabankhack.ddns.net:8000/docs)
