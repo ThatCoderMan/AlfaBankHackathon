@@ -42,9 +42,9 @@ class TemplateCreate(TemplateBase):
     direction_id: PositiveInt = 1
     grade_id: PositiveInt = 1
     type_id: PositiveInt = 1
-    link: str | None
-    duration: PositiveInt | None
-    recommendation: str | None
+    link: str | None = None
+    duration: PositiveInt | None = None
+    recommendation: str | None = None
 
 
 class TemplateUpdate(TemplateBase):

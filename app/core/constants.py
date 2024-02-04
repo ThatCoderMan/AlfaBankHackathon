@@ -2,9 +2,9 @@ from datetime import datetime, timedelta
 
 # Database ID's constants
 NOT_STATED_ID = 1
-APPLICATION_STATUS_ID = 2
-AT_WORK_STATUS_ID = 3
-PLANED_STATUS_ID = 3
+APPLICATION_STATUS_ID = 6
+AT_WORK_STATUS_ID = 1
+PLANED_STATUS_ID = 4
 
 
 # Field limits
@@ -50,6 +50,7 @@ CHIEF_TASK_UPDATE_FIELDS = (
     'deadline',
 )
 EMPLOYEE_TASK_CREATE_FIELDS = (
+    'pdp_id',
     'title',
     'type_id',
     'description',
