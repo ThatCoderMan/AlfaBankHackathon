@@ -61,32 +61,34 @@ class NoAccessFieldException(HTTPException):
             ],
         )
 
-    class NoAccessObjectException(HTTPException):
-        def __init__(self, model):
-            super().__init__(
-                status_code=403,
-                detail=[
-                    {
-                        'loc': ["body", model.__str__()],
-                        'msg': constants.NO_ACCESS_OBJECT_MESSAGE.format(
-                            name=model.__str__()
-                        ),
-                        'type': "no_access_object",
-                    }
-                ],
-            )
 
-    class UnacceptableStatusException(HTTPException):
-        def __init__(self, status_id):
-            super().__init__(
-                status_code=403,
-                detail=[
-                    {
-                        'loc': ["body", 'status_id'],
-                        'msg': constants.UNACCEPTABLE_STATUS_MESSAGE.format(
-                            status_id=status_id
-                        ),
-                        'type': "unacceptable_status",
-                    }
-                ],
-            )
+class NoAccessObjectException(HTTPException):
+    def __init__(self, model):
+        super().__init__(
+            status_code=403,
+            detail=[
+                {
+                    'loc': ["body", model.__str__()],
+                    'msg': constants.NO_ACCESS_OBJECT_MESSAGE.format(
+                        name=model.__str__()
+                    ),
+                    'type': "no_access_object",
+                }
+            ],
+        )
+
+
+class UnacceptableStatusException(HTTPException):
+    def __init__(self, status_id):
+        super().__init__(
+            status_code=403,
+            detail=[
+                {
+                    'loc': ["body", 'status_id'],
+                    'msg': constants.UNACCEPTABLE_STATUS_MESSAGE.format(
+                        status_id=status_id
+                    ),
+                    'type': "unacceptable_status",
+                }
+            ],
+        )

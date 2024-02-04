@@ -23,6 +23,7 @@ async def create_tasks_from_template(
         if hasattr(Task, field) and field not in ['id', 'type']
     }
     task_dict['status_id'] = PLANED_STATUS_ID
+    task_dict['type_id'] = NOT_STATED_ID
     tasks_data = []
     for pdp in pdps:
         task_data = {'pdp_id': pdp}

@@ -75,7 +75,8 @@ async def create_task(
         pdp = await pdp_crud.get_by_user_id(session=session, user_id=user.id)
         task_in.pdp_id = pdp.id
         task_in.status_id = APPLICATION_STATUS_ID
-        task_in.skills = ['default']
+        if not task_in.skills:
+            task_in.skills = ['default']
     task_obj = await task_crud.create(session=session, obj_in=task_in)
 
     await session.refresh(user)
@@ -119,18 +120,12 @@ async def change_task(
             raise exceptions.NoAccessFieldException(field=field)
     statuses = await status_crud.get_multi_by_role(session=session, user=user)
     if user.role == UserRole.EMPLOYEE:
-        if (
-            task_in.status_id not in [status.id for status in statuses]
-            or task_in.status_id == APPLICATION_STATUS_ID
-        ):
+        if task_in.status_id not in [status.id for status in statuses]:
             raise exceptions.UnacceptableStatusException(
                 status_id=task_in.status_id
             )
     else:
-        if (
-            task_in.status_id not in [status.id for status in statuses]
-            or task_in.status_id == AT_WORK_STATUS_ID
-        ):
+        if task_in.status_id not in [status.id for status in statuses]:
             raise exceptions.UnacceptableStatusException(
                 status_id=task_in.status_id
             )
