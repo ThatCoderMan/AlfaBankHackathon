@@ -2,6 +2,8 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.exceptions import NotExistException
+
 
 class CRUDBase:
     def __init__(self, model):
@@ -28,8 +30,11 @@ class CRUDBase:
         db_obj = self.model(**obj_in_data, **extra_fields)
         session.add(db_obj)
 
-        await session.commit()
-        await session.refresh(db_obj)
+        try:
+            await session.commit()
+            await session.refresh(db_obj)
+        except Exception:
+            raise NotExistException(self.model)
 
         return db_obj
 
