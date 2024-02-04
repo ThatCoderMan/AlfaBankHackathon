@@ -2,23 +2,30 @@
   <img src="https://upload.wikimedia.org/wikipedia/commons/7/77/Alfa-Bank.svg" alt="AlfaBankHackathon">
 </p>
 
+<br>
+
 <div id="header" align="center">
-  <h1>«AlfaBankHackathon»</h1>
   <img src="https://img.shields.io/badge/Python-3.11.1-F8F8FF?style=for-the-badge&logo=python&logoColor=20B2AA">
-  <img src="https://img.shields.io/badge/FastAPI-0.104.1-F8F8FF?style=for-the-badge&logo=FastAPI&logoColor=20B2AA">
+  <img src="https://img.shields.io/badge/FastAPI-0.109.1-F8F8FF?style=for-the-badge&logo=FastAPI&logoColor=20B2AA">
   <img src="https://img.shields.io/badge/PostgreSQL-555555?style=for-the-badge&logo=postgresql&logoColor=F5F5DC">
   <img src="https://img.shields.io/badge/SQLAlchemy-2.0.23-F8F8FF?style=for-the-badge&logo=SQLAlchemy&logoColor=20B2AA">
+  <img src="https://img.shields.io/badge/Pydantic-2.1.0-F8F8FF?style=for-the-badge&logo=pydantic&logoColor=20B2AA">
+  <img src="https://img.shields.io/badge/Uvicorn-0.26.0-F8F8FF?style=for-the-badge&logo=uvicorn&logoColor=20B2AA">
+  <img src="https://img.shields.io/badge/Alembic-1.13.1-F8F8FF?style=for-the-badge&logo=alembic&logoColor=20B2AA">
   <img src="https://img.shields.io/badge/Docker-555555?style=for-the-badge&logo=docker&logoColor=2496ED">
 </div>
 
+<br>
+
 Документация к API будет доступна по url-адресу [AlfaBankHackathon/SWAGER](http://alfabankhack.ddns.net:8000/docs)
+
+Ссылка на zip-архив с некоторыми скриншотами [zip](https://drive.google.com/file/d/1bScOyVM6yZnohbRz4_n6zsYUs8QWWmuV/view?usp=drive_link)
 
 <details><summary><h1>Сервис по развитию сотрудников</h1></summary>
 
 * **MVP:**
   + Цель: Организация работы по развитию сотрудников IT-департамента в рамках Индивидуального плана развития (ИПР).
   + Размещение: Внутри корпоративного портала Альфа-банка "Alfa People".
-
 
 * **Функциональные возможности:**
   + Создание и управление ИПР.
@@ -41,9 +48,9 @@
   + Сотрудники IT-департамента Альфа-банка.
   + Руководители IT-департамента.
 
-
-
 </details>
+
+<details><summary><h1>Инструкция по установке</h1></summary>
 
 Клонируйте репозиторий и перейдите в него.
 ```bash
@@ -91,6 +98,8 @@ poetry update
   uvicorn app.main:app --reload
   ```
 
+</details>
+
 <details><summary><h1>Запуск проекта через докер</h1></summary>
 
 - Клонируйте репозиторий.
@@ -120,7 +129,20 @@ poetry update
 
 </details>
 
-* **Backend:**
+<details><summary>Ссылки на используемые библиотеки</summary>
+    
+- [Python](https://www.python.org/downloads/release/python-3111/)
+- [FastAPI](https://fastapi.tiangolo.com/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [SQLAlchemy](https://www.sqlalchemy.org/)
+- [Pydantic](https://pydantic-docs.helpmanual.io/)
+- [Uvicorn](https://www.uvicorn.org/)
+- [Alembic](https://alembic.sqlalchemy.org/en/latest/)
+- [Docker](https://www.docker.com/)
+
+</details>
+
+* **Разработчики Backend:**
   + [Артемий](https://github.com/ThatCoderMan)
   + [Василий](https://github.com/inferno681)
   + [Владислав](https://github.com/VladislavCR)
