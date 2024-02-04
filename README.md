@@ -129,7 +129,6 @@ poetry update
 
 </details>
 
-
 <details><summary>Ссылки на используемые библиотеки</summary>
     
 - [Python](https://www.python.org/downloads/release/python-3111/)
